@@ -7,3 +7,5 @@ addSbtPlugin("ch.epfl.scala"                     % "sbt-bloop"        % "1.3.5")
 addSbtPlugin("com.eed3si9n"                      % "sbt-unidoc"       % "0.4.3")
 addSbtPlugin("com.geirsson"                      % "sbt-ci-release"   % "1.5.0")
 addSbtPlugin("com.thoughtworks.sbt-api-mappings" % "sbt-api-mappings" % "3.0.0")
+
+libraryDependencies += "org.snakeyaml" % "snakeyaml-engine" % "2.3"
