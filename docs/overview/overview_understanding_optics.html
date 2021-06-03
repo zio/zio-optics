@@ -1,0 +1,129 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Understanding Optics · ZIO Optics</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="ZIO Optics is based on a single representation of an optic as a combination of a getter and a setter."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Understanding Optics · ZIO Optics"/><meta property="og:type" content="website"/><meta property="og:url" content="https://zio.github.io/zio-optics/"/><meta property="og:description" content="ZIO Optics is based on a single representation of an optic as a combination of a getter and a setter."/><meta property="og:image" content="https://zio.github.io/zio-optics/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://zio.github.io/zio-optics/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/zio-optics/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100,"cornerOffset":100}
+          )
+        });
+        </script><script src="/zio-optics/js/scrollSpy.js"></script><link rel="stylesheet" href="/zio-optics/css/main.css"/><script src="/zio-optics/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/zio-optics/"><img class="logo" src="/zio-optics/img/navbar_brand2x.png" alt="ZIO Optics"/><h2 class="headerTitleWithLogo">ZIO Optics</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/zio-optics/docs/overview/overview_index" target="_self">Overview</a></li><li class=""><a href="/zio-optics/docs/usecases/usecases_index" target="_self">Use Cases</a></li><li class=""><a href="api/index.html" target="_self">API</a></li><li class=""><a href="/zio-optics/docs/about/about_index" target="_self">About</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Overview</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Overview</h3><ul class=""><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_index">Summary</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/zio-optics/docs/overview/overview_understanding_optics">Understanding Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_constructing_optics">Constructing Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_composing_optics">Composing Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_using_optics">Using Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_effectual_optics">Effectual Optics</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Understanding Optics</h1></header><article><div><span><p>ZIO Optics is based on a single representation of an optic as a combination of a getter and a setter.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Optic</span>[-<span class="hljs-type">GetWhole</span>, -<span class="hljs-type">SetWholeBefore</span>, -<span class="hljs-type">SetPiece</span>, +<span class="hljs-type">GetError</span>, +<span class="hljs-type">SetError</span>, +<span class="hljs-type">GetPiece</span>, +<span class="hljs-type">SetWholeAfter</span>] </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getOptic</span></span>(whole: <span class="hljs-type">GetWhole</span>): <span class="hljs-type">Either</span>[<span class="hljs-type">GetError</span>, <span class="hljs-type">GetPiece</span>]
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setOptic</span></span>(piece: <span class="hljs-type">SetPiece</span>)(whole: <span class="hljs-type">SetWholeBefore</span>): <span class="hljs-type">Either</span>[<span class="hljs-type">SetError</span>, <span class="hljs-type">SetWholeAfter</span>]
+}
+</code></pre>
+<p>The getter can take some larger structure of type <code>GetWhole</code> and get a part of it of type <code>GetPiece</code>. It can potentially fail with an error of type <code>GetError</code> because the part we are trying to get might not exist in the larger structure.</p>
+<p>The setter has the ability, given some piece of type <code>SetPiece</code> and an original structure of type <code>SetWholeBefore</code>, to return a new structure of type <code>SetWholeAfter</code>. Setting can fail with an error of type <code>SetError</code> because the piece we are trying to set might not exist in the structure.</p>
+<h2><a class="anchor" aria-hidden="true" id="lens"></a><a href="#lens" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Lens</h2>
+<p>A <code>Lens</code> is an optic that accesses a field of a product type, such as a tuple or case class.</p>
+<p>The <code>GetError</code> type of a <code>Lens</code> is <code>Nothing</code> because we can always get a field of a product type. The <code>SetError</code> type is also <code>Nothing</code> because we can always set the field of a product type to a new value.</p>
+<p>In this case the <code>GetWhole</code>, <code>SetWholeBefore</code>, and <code>SetWholeAfter</code> types are the same and represent the product type. The <code>GetPiece</code> and <code>SetPiece</code> types are also the same and represent the field.</p>
+<p>Thus, we have:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Lens</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>] </span>= <span class="hljs-type">Optic</span>[<span class="hljs-type">S</span>, <span class="hljs-type">S</span>, <span class="hljs-type">A</span>, <span class="hljs-type">Nothing</span>, <span class="hljs-type">Nothing</span>, <span class="hljs-type">A</span>, <span class="hljs-type">S</span>]
+</code></pre>
+<p>The simplified signature is:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Lens</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>] </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getOptic</span></span>(s: <span class="hljs-type">S</span>): <span class="hljs-type">Either</span>[<span class="hljs-type">Nothing</span>, <span class="hljs-type">A</span>]
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setOptic</span></span>(a: <span class="hljs-type">A</span>)(s: <span class="hljs-type">S</span>): <span class="hljs-type">Either</span>[<span class="hljs-type">Nothing</span>, <span class="hljs-type">S</span>]
+}
+</code></pre>
+<p>This conforms exactly to our description above. A lens is an optic where we can always get part of the larger structure and given an original structure we can always set a new value in that structure.</p>
+<h2><a class="anchor" aria-hidden="true" id="prism"></a><a href="#prism" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Prism</h2>
+<p>A <code>Prism</code> is an optic that accesses a case of a sum type, such as the <code>Left</code> or <code>Right</code> cases of an <code>Either</code> or one of the subtypes of a sealed trait.</p>
+<p>Getting part of a larger data structure with a prism can fail because the case we are trying to access might not exist. For example, we might be trying to access the right side of an <code>Either</code> but the either is actually a <code>Left</code>.</p>
+<p>We use the data type <code>OpticFailure</code> to model the different ways that getting or setting with an optic can fail. So the <code>GetError</code> type of a prism will be <code>OpticFailure</code>.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">OpticFailure</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Throwable</span></span>
+</code></pre>
+<p>The <code>SetError</code> type of a prism will be <code>Nothing</code> because given one of the cases of a product type we can always return a new value of the product type since each case of the product type is an instance of the product type.</p>
+<p>A prism also differs from a lens in that we do not need any original structure to set. A product type consists of nothing but its cases so if we have a new value of the case we want to set we can just use that value and don't need the original structure.</p>
+<p>We represent this by using <code>Any</code> for the <code>SetWholeBefore</code> type, indicating that we do not need any original structure to set a new value.</p>
+<p>Thus, the definition of a prism is:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Prism</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>] </span>= <span class="hljs-type">Optic</span>[<span class="hljs-type">S</span>, <span class="hljs-type">Any</span>, <span class="hljs-type">A</span>, <span class="hljs-type">OpticFailure</span>, <span class="hljs-type">Nothing</span>, <span class="hljs-type">A</span>, <span class="hljs-type">S</span>]
+</code></pre>
+<p>And the simplified signature is:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Prism</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>] </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getOptic</span></span>(s: <span class="hljs-type">S</span>): <span class="hljs-type">Either</span>[<span class="hljs-type">OpticFailure</span>, <span class="hljs-type">A</span>]
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setOptic</span></span>(a: <span class="hljs-type">Any</span>)(s: <span class="hljs-type">S</span>): <span class="hljs-type">Either</span>[<span class="hljs-type">Nothing</span>, <span class="hljs-type">S</span>]
+}
+</code></pre>
+<p>Again this conforms exactly to our description. A prism is an optic where we might not be able to get a value but can always set a value and in fact do not require any original structure to set.</p>
+<h2><a class="anchor" aria-hidden="true" id="traversal"></a><a href="#traversal" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Traversal</h2>
+<p>A <code>Traversal</code> is an optic that accesses zero or more values in a collection, such as a <code>Chunk</code>.</p>
+<p>Both getting and setting can fail because, for example, we might be trying to get or set a value at an index that does not exist in the <code>Chunk</code>. We also need the original structure because we may only be modifying part of the collection.</p>
+<p>The distinguishing feature of a <code>Traversal</code> is that it can access zero or more values instead of a single value. We represent this by parameterizing <code>SetPiece</code> and <code>GetPiece</code> on a <code>Chunk</code> instead of a single value.</p>
+<p>The definition of a traversal looks like this:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> zio.<span class="hljs-type">Chunk</span>
+
+<span class="hljs-class"><span class="hljs-keyword">type</span> <span class="hljs-title">Traversal</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>] </span>= <span class="hljs-type">Optic</span>[<span class="hljs-type">S</span>, <span class="hljs-type">S</span>, <span class="hljs-type">Chunk</span>[<span class="hljs-type">A</span>], <span class="hljs-type">OpticFailure</span>, <span class="hljs-type">OpticFailure</span>, <span class="hljs-type">Chunk</span>[<span class="hljs-type">A</span>], <span class="hljs-type">S</span>]
+</code></pre>
+<p>And the simplified signature looks like this:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Traversal</span>[<span class="hljs-type">S</span>, <span class="hljs-type">A</span>] </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getOptic</span></span>(s: <span class="hljs-type">S</span>): <span class="hljs-type">Either</span>[<span class="hljs-type">OpticFailure</span>, <span class="hljs-type">Chunk</span>[<span class="hljs-type">A</span>]]
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setOptic</span></span>(as: <span class="hljs-type">Chunk</span>[<span class="hljs-type">A</span>])(s: <span class="hljs-type">S</span>): <span class="hljs-type">Either</span>[<span class="hljs-type">OpticFailure</span>, <span class="hljs-type">S</span>]
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="other"></a><a href="#other" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Other</h2>
+<p>ZIO Optics supports a wide variety of other optics:</p>
+<ul>
+<li><strong>Optional</strong> - An <code>Optional</code> is an optic that accesses part of a larger structure where the part being accessed may not exist and the structure contains more than just that part. Both the <code>GetError</code> and <code>SetError</code> types are <code>OpticFailure</code> because the part may not exist in the structure and setting does require the original structure since it consists of more than just this one part.</li>
+<li><strong>Iso</strong> - An <code>Iso</code> is an optic that accesses a part of a structure where the structure consists of nothing but the part. Both the <code>GetError</code> and <code>SetError</code> types are <code>Nothing</code> and the <code>SetWholeBefore</code> type is <code>Any</code>.</li>
+<li><strong>Fold</strong> - A <code>Fold</code> is a <code>Traversal</code> that only allows getting a collection of values. The <code>SetWhole</code> before and <code>SetPiece</code> types are nothing because it is impossible to ever set.</li>
+<li><strong>Getter</strong> - A <code>Getter</code> is an optic that only allows getting a value. Like a <code>Fold</code> the <code>SetWholeBefore</code> and <code>SetPiece</code> types are <code>Nothing</code> because it is impossible to ever set.</li>
+<li><strong>Setter</strong> - A <code>Setter</code> is an optic that only allows setting a value. The <code>GetWhole</code> type is <code>Nothing</code> because it is impossible to ever get.</li>
+</ul>
+<p>There are also more polymorphic versions of each optic that allow the types of the data structure and part before and after to differ. For example, a <code>ZPrism</code> could allow us to access the right case of an <code>Either[A, B]</code> and set a <code>C</code> value to return an <code>Either[A, C]</code>.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/zio-optics/docs/overview/overview_index"><span class="arrow-prev">← </span><span>Summary</span></a><a class="docs-next button" href="/zio-optics/docs/overview/overview_constructing_optics"><span>Constructing Optics</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#lens">Lens</a></li><li><a href="#prism">Prism</a></li><li><a href="#traversal">Traversal</a></li><li><a href="#other">Other</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/zio-optics/" class="nav-home"><img src="/zio-optics/img/sidebar_brand2x.png" alt="ZIO Optics"/></a><div><h5>GitHub</h5><a class="github-button" href="https://github.com/zio/zio-optics" data-icon="octicon-star" data-count-href="/zio/zio-poptics/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div><div><h5>Chat with us on Discord</h5><a href="https://discord.gg/2ccFBr4"><img src="/zio-optics//img/discord.png" width="120" alt="discord"/></a></div><div><h5>Additional resources</h5><a href="/zio-optics/api/index.html">Scaladoc of zio-optics</a></div></section><section class="copyright">Copyright © 2021 ZIO Maintainers</section></footer></div></body></html>

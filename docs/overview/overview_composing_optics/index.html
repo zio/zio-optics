@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Composing Optics · ZIO Optics</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="One of the great features of optics is that they compose."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Composing Optics · ZIO Optics"/><meta property="og:type" content="website"/><meta property="og:url" content="https://zio.github.io/zio-optics/"/><meta property="og:description" content="One of the great features of optics is that they compose."/><meta property="og:image" content="https://zio.github.io/zio-optics/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://zio.github.io/zio-optics/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/zio-optics/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100,"cornerOffset":100}
+          )
+        });
+        </script><script src="/zio-optics/js/scrollSpy.js"></script><link rel="stylesheet" href="/zio-optics/css/main.css"/><script src="/zio-optics/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/zio-optics/"><img class="logo" src="/zio-optics/img/navbar_brand2x.png" alt="ZIO Optics"/><h2 class="headerTitleWithLogo">ZIO Optics</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/zio-optics/docs/overview/overview_index" target="_self">Overview</a></li><li class=""><a href="/zio-optics/docs/usecases/usecases_index" target="_self">Use Cases</a></li><li class=""><a href="api/index.html" target="_self">API</a></li><li class=""><a href="/zio-optics/docs/about/about_index" target="_self">About</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Overview</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Overview</h3><ul class=""><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_index">Summary</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_understanding_optics">Understanding Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_constructing_optics">Constructing Optics</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/zio-optics/docs/overview/overview_composing_optics">Composing Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_using_optics">Using Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_effectual_optics">Effectual Optics</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Composing Optics</h1></header><article><div><span><p>One of the great features of optics is that they compose.</p>
+<p>If we have an optic that accesses a part <code>Piece</code> of a larger structure <code>Whole</code> and another optic that accesses a part <code>Piece2</code> of <code>Piece</code> we can combine them to create an optic that accesses the part <code>Piece2</code> of the original structure <code>Whole</code>. We do this using the <code>&gt;&gt;&gt;</code> operator or its named alias <code>andThen</code>.</p>
+<p>For example, say we have an <code>Either[String, Person]</code> representing either a person or a failure message indicating why the person does not exist. We would like to modify the age of the person, if it exists.</p>
+<p>Rather than having to define a new optic for this, we can combine the existing <code>right</code> and <code>age</code> optics. The <code>right</code> optic will first &quot;zoom in&quot; to the <code>Person</code> on the right side of the either and then the <code>age</code> optic will further zoom in to the age field within the person.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> zio._
+<span class="hljs-keyword">import</span> zio.optics._
+
+<span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span>(<span class="hljs-params">name: <span class="hljs-type">String</span>, age: <span class="hljs-type">Int</span></span>)</span>
+
+<span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Person</span> </span>{
+  <span class="hljs-keyword">val</span> age: <span class="hljs-type">Lens</span>[<span class="hljs-type">Person</span>, <span class="hljs-type">Int</span>] =
+    <span class="hljs-type">Lens</span>(
+      person =&gt; <span class="hljs-type">Right</span>(person.age),
+      age =&gt; person =&gt; <span class="hljs-type">Right</span>(person.copy(age = age))
+    )
+}
+
+<span class="hljs-keyword">val</span> optic: <span class="hljs-type">Optional</span>[<span class="hljs-type">Either</span>[<span class="hljs-type">String</span>, <span class="hljs-type">Person</span>], <span class="hljs-type">Int</span>] =
+  <span class="hljs-type">Optic</span>.right &gt;&gt;&gt; <span class="hljs-type">Person</span>.age
+</code></pre>
+<p>The <code>&gt;&gt;&gt;</code> operator will automatically take care of composing the optics together for us, returning the most specific optic possible given the two optics that we are combining.</p>
+<p>Sometimes instead of directly accessing part of the value accessed by the first optic like this we would like to access each value within a collection accessed by the first optic.</p>
+<p>For example, if we have an optic that returns a <code>Chunk[Person]</code> we may want to modify a field in every <code>Person</code> returned by the first optic instead of modifying the <code>Chunk[Person]</code> itself. We can do this using the <code>foreach</code> operator.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">hasJanuaryBirthday</span></span>(person: <span class="hljs-type">Person</span>): <span class="hljs-type">Boolean</span> =
+  ???
+
+<span class="hljs-keyword">val</span> januaryAges: <span class="hljs-type">Traversal</span>[<span class="hljs-type">Chunk</span>[<span class="hljs-type">Person</span>], <span class="hljs-type">Int</span>] =
+  <span class="hljs-type">Optic</span>.filter(hasJanuaryBirthday).foreach(<span class="hljs-type">Person</span>.age)
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/zio-optics/docs/overview/overview_constructing_optics"><span class="arrow-prev">← </span><span>Constructing Optics</span></a><a class="docs-next button" href="/zio-optics/docs/overview/overview_using_optics"><span>Using Optics</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/zio-optics/" class="nav-home"><img src="/zio-optics/img/sidebar_brand2x.png" alt="ZIO Optics"/></a><div><h5>GitHub</h5><a class="github-button" href="https://github.com/zio/zio-optics" data-icon="octicon-star" data-count-href="/zio/zio-poptics/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div><div><h5>Chat with us on Discord</h5><a href="https://discord.gg/2ccFBr4"><img src="/zio-optics//img/discord.png" width="120" alt="discord"/></a></div><div><h5>Additional resources</h5><a href="/zio-optics/api/index.html">Scaladoc of zio-optics</a></div></section><section class="copyright">Copyright © 2021 ZIO Maintainers</section></footer></div></body></html>

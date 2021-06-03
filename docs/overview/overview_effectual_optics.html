@@ -1,0 +1,84 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Effectual Optics · ZIO Optics</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="In addition to &quot;pure&quot; optics like the ones discussed so far ZIO Optics supports optics where getting and setting involve `ZIO` or `STM` effects. This allows using optics to work with ZIO data structures such as `TMap`."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Effectual Optics · ZIO Optics"/><meta property="og:type" content="website"/><meta property="og:url" content="https://zio.github.io/zio-optics/"/><meta property="og:description" content="In addition to &quot;pure&quot; optics like the ones discussed so far ZIO Optics supports optics where getting and setting involve `ZIO` or `STM` effects. This allows using optics to work with ZIO data structures such as `TMap`."/><meta property="og:image" content="https://zio.github.io/zio-optics/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://zio.github.io/zio-optics/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/zio-optics/img/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+          addBackToTop(
+            {"zIndex":100,"cornerOffset":100}
+          )
+        });
+        </script><script src="/zio-optics/js/scrollSpy.js"></script><link rel="stylesheet" href="/zio-optics/css/main.css"/><script src="/zio-optics/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/zio-optics/"><img class="logo" src="/zio-optics/img/navbar_brand2x.png" alt="ZIO Optics"/><h2 class="headerTitleWithLogo">ZIO Optics</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/zio-optics/docs/overview/overview_index" target="_self">Overview</a></li><li class=""><a href="/zio-optics/docs/usecases/usecases_index" target="_self">Use Cases</a></li><li class=""><a href="api/index.html" target="_self">API</a></li><li class=""><a href="/zio-optics/docs/about/about_index" target="_self">About</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Overview</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Overview</h3><ul class=""><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_index">Summary</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_understanding_optics">Understanding Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_constructing_optics">Constructing Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_composing_optics">Composing Optics</a></li><li class="navListItem"><a class="navItem" href="/zio-optics/docs/overview/overview_using_optics">Using Optics</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/zio-optics/docs/overview/overview_effectual_optics">Effectual Optics</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Effectual Optics</h1></header><article><div><span><p>In addition to &quot;pure&quot; optics like the ones discussed so far ZIO Optics supports optics where getting and setting involve <code>ZIO</code> or <code>STM</code> effects. This allows using optics to work with ZIO data structures such as <code>TMap</code>.</p>
+<p>These optics work exactly the same way as pure optics except that instead of the getter and setter returning an <code>Either</code> they return a <code>ZIO</code> or an <code>STM</code> value.</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> zio._
+
+<span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Optic</span>[-<span class="hljs-type">GetWhole</span>, -<span class="hljs-type">SetWholeBefore</span>, -<span class="hljs-type">SetPiece</span>, +<span class="hljs-type">GetError</span>, +<span class="hljs-type">SetError</span>, +<span class="hljs-type">GetPiece</span>, +<span class="hljs-type">SetWholeAfter</span>] </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getOptic</span></span>(whole: <span class="hljs-type">GetWhole</span>): <span class="hljs-type">IO</span>[<span class="hljs-type">GetError</span>, <span class="hljs-type">GetPiece</span>]
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setOptic</span></span>(piece: <span class="hljs-type">SetPiece</span>)(whole: <span class="hljs-type">SetWholeBefore</span>): <span class="hljs-type">IO</span>[<span class="hljs-type">SetError</span>, <span class="hljs-type">SetWholeAfter</span>]
+}
+</code></pre>
+<p>To work with these optics, import <code>zio.optics.opticsm._</code> for optics where the result type is a <code>ZIO</code> value or <code>zio.optics.topics._</code> for optics where the result type is an <code>STM</code> value. This will automatically bring the appropriate version of the <code>Optic</code> data type as well as its constructors and syntax into scope.</p>
+<p>For example, here is how we could define an optic to work with a nested value inside a <code>TMap</code>:</p>
+<pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> zio.stm._
+<span class="hljs-keyword">import</span> zio.optics.toptics._
+
+<span class="hljs-keyword">val</span> optic: <span class="hljs-type">Optional</span>[<span class="hljs-type">TMap</span>[<span class="hljs-type">String</span>, <span class="hljs-type">Either</span>[<span class="hljs-type">String</span>, <span class="hljs-type">Int</span>]], <span class="hljs-type">Int</span>] =
+  <span class="hljs-type">TOptics</span>.key(<span class="hljs-string">"key"</span>) &gt;&gt;&gt; <span class="hljs-type">Optic</span>.right
+</code></pre>
+<p>Note that optics specific to STM data structures are defined in the <code>TOptics</code> object. Otherwise everything works the same way.</p>
+<p>Just like with <code>Ref</code>, ZIO Optics provides special support for working with STM data types such as <code>TMap</code>, so we can update our <code>TMap</code> using &quot;dot&quot; syntax like this:</p>
+<pre><code class="hljs css language-scala:mdoc"><span class="hljs-selector-tag">tMap</span><span class="hljs-selector-class">.key</span>("<span class="hljs-selector-tag">key</span>")<span class="hljs-selector-class">.right</span><span class="hljs-selector-class">.at</span>(0)<span class="hljs-selector-class">.update</span>(_ + 1)
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/zio-optics/docs/overview/overview_using_optics"><span class="arrow-prev">← </span><span>Using Optics</span></a></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/zio-optics/" class="nav-home"><img src="/zio-optics/img/sidebar_brand2x.png" alt="ZIO Optics"/></a><div><h5>GitHub</h5><a class="github-button" href="https://github.com/zio/zio-optics" data-icon="octicon-star" data-count-href="/zio/zio-poptics/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div><div><h5>Chat with us on Discord</h5><a href="https://discord.gg/2ccFBr4"><img src="/zio-optics//img/discord.png" width="120" alt="discord"/></a></div><div><h5>Additional resources</h5><a href="/zio-optics/api/index.html">Scaladoc of zio-optics</a></div></section><section class="copyright">Copyright © 2021 ZIO Maintainers</section></footer></div></body></html>
