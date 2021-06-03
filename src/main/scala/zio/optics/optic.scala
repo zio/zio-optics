@@ -71,7 +71,7 @@ trait OpticModule {
     /**
      * Gets a piece of the specified whole.
      */
-    def get(whole: GetWhole): OpticResult[GetError, GetPiece] =
+    final def get(whole: GetWhole): OpticResult[GetError, GetPiece] =
       getOptic(whole).mapError(_._1)
 
     /**
@@ -194,6 +194,12 @@ trait OpticModule {
       cons >>> first
 
     /**
+     * The identity optic.
+     */
+    def identity[A]: Iso[A, A] =
+      Iso(a => succeed(a), a => succeed(a))
+
+    /**
      * An optic that accesses the value at the specified key in a map.
      */
     def key[K, V](k: K): Optional[Map[K, V], V] =
@@ -295,6 +301,21 @@ trait OpticModule {
        */
       def update(whole: GetWhole with SetWholeBefore)(f: GetPiece => SetPiece): OpticResult[Error, SetWholeAfter] =
         self.getOptic(whole).flatMap(piece => self.setOptic(f(piece))(whole)).mapError(_._1)
+    }
+
+    /**
+     * Provides implicit syntax for when the optic is an isomorphism.
+     */
+    implicit class IsoSyntax[Whole, Piece](private val self: Iso[Whole, Piece]) {
+
+      /**
+       * Flips this isomorphism around.
+       */
+      def flip: Iso[Piece, Whole] =
+        Optic(
+          piece => self.setOptic(piece)(()).mapError(_._1),
+          whole => _ => self.getOptic(whole).mapError(_._1)
+        )
     }
 
     /**

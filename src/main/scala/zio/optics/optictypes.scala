@@ -41,6 +41,21 @@ trait OpticTypesModule {
   type PrismPartiallyApplied[+S, A]     = ZPrismPartiallyApplied[S, A, A]
   type TraversalPartiallyApplied[+S, A] = ZTraversalPartiallyApplied[S, A, A]
 
+  object Iso {
+
+    /**
+     * Constructs an `Iso` from a `get` and a `set` function.
+     */
+    def apply[S, A](get: S => OpticResult[Nothing, A], set: A => OpticResult[Nothing, S]): Iso[S, A] =
+      ZIso(get, set)
+
+    /**
+     * The identity optic.
+     */
+    def identity[A]: Iso[A, A] =
+      ZIso.identity
+  }
+
   object Lens {
 
     /**
@@ -162,6 +177,21 @@ trait OpticTypesModule {
      */
     def slice[A](from: Int, until: Int): Traversal[Chunk[A], A] =
       ZTraversal.slice(from, until)
+  }
+
+  object ZIso {
+
+    /**
+     * Constructs a `ZIso` from a `get` and a `set` function.
+     */
+    def apply[S, A](get: S => OpticResult[Nothing, A], set: A => OpticResult[Nothing, S]): Iso[S, A] =
+      Optic(get, a => _ => set(a))
+
+    /**
+     * The identity optic.
+     */
+    def identity[A]: Iso[A, A] =
+      Optic.identity
   }
 
   object ZLens {
