@@ -185,7 +185,7 @@ trait OpticTypesModule {
      * Constructs a `ZIso` from a `get` and a `set` function.
      */
     def apply[S, A](get: S => OpticResult[Nothing, A], set: A => OpticResult[Nothing, S]): Iso[S, A] =
-      ZIso(get, set)
+      Optic(get, a => _ => set(a))
 
     /**
      * The identity optic.
