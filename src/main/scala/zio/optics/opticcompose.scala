@@ -1,6 +1,6 @@
 package zio.optics
 
-trait OpticComposeModule { self: OpticFailureModule with OpticModule with OpticResultModule =>
+trait OpticComposeModule { self: OpticFailureModule with OpticModule with OpticResultModule with OpticTypesModule =>
 
   /**
    * `OpticCompose` abstracts over the different ways that optics can be
