@@ -435,367 +435,367 @@ trait OpticModule {
                 )
         )
     }
-  }
-
-  /**
-   * Provides implicit syntax for working with partially applied optics.
-   */
-  implicit class PariallyAppliedOpticSyntax[SetPiece, Error, GetPiece, SetWholeAfter](
-    private val self: Optic[Any, Any, SetPiece, Error, Error, GetPiece, SetWholeAfter]
-  ) {
 
     /**
-     * Updates the whole contained in this partially applied optic by
-     * transforming a piece of it using the specified function.
+     * Provides implicit syntax for working with partially applied optics.
      */
-    def update(f: GetPiece => SetPiece): OpticResult[Error, SetWholeAfter] =
-      self.getOptic(()).flatMap(piece => self.setOptic(f(piece))(())).mapError(_._1)
-  }
+    implicit class PariallyAppliedOpticSyntax[SetPiece, Error, GetPiece, SetWholeAfter](
+      private val self: Optic[Any, Any, SetPiece, Error, Error, GetPiece, SetWholeAfter]
+    ) {
 
-  /**
-   * Provides implicit syntax for accessing the specified index of a chunk
-   * accessed by a partially applied optic.
-   */
-  implicit class AtPartiallyAppliedSyntax[
-    GetError >: OpticFailure,
-    SetError >: GetError,
-    Piece,
-    Whole
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      Chunk[Piece],
-      GetError,
-      SetError,
-      Chunk[Piece],
+      /**
+       * Updates the whole contained in this partially applied optic by
+       * transforming a piece of it using the specified function.
+       */
+      def update(f: GetPiece => SetPiece): OpticResult[Error, SetWholeAfter] =
+        self.getOptic(()).flatMap(piece => self.setOptic(f(piece))(())).mapError(_._1)
+    }
+
+    /**
+     * Provides implicit syntax for accessing the specified index of a chunk
+     * accessed by a partially applied optic.
+     */
+    implicit class AtPartiallyAppliedSyntax[
+      GetError >: OpticFailure,
+      SetError >: GetError,
+      Piece,
       Whole
-    ]
-  ) {
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        Chunk[Piece],
+        GetError,
+        SetError,
+        Chunk[Piece],
+        Whole
+      ]
+    ) {
+
+      /**
+       * Accesses the specified index of a chunk.
+       */
+      final def at(n: Int): Optic[Any, Any, Piece, GetError, SetError, Piece, Whole] =
+        self >>> Optic.at(n)
+    }
 
     /**
-     * Accesses the specified index of a chunk.
+     * Provides implicit syntax for accessing the `::` case of a `List` accessed
+     * by a partially applied optic.
      */
-    final def at(n: Int): Optic[Any, Any, Piece, GetError, SetError, Piece, Whole] =
-      self >>> Optic.at(n)
-  }
-
-  /**
-   * Provides implicit syntax for accessing the `::` case of a `List` accessed
-   * by a partially applied optic.
-   */
-  implicit class ConsPartiallyAppliedSyntax[
-    SetPiece,
-    GetError >: OpticFailure,
-    SetError,
-    GetPiece,
-    SetWhole
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      List[SetPiece],
-      GetError,
+    implicit class ConsPartiallyAppliedSyntax[
+      SetPiece,
+      GetError >: OpticFailure,
       SetError,
-      List[GetPiece],
+      GetPiece,
       SetWhole
-    ]
-  ) {
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        List[SetPiece],
+        GetError,
+        SetError,
+        List[GetPiece],
+        SetWhole
+      ]
+    ) {
+
+      /**
+       * Accesses the `::` case of a `List`.
+       */
+      final def cons
+        : Optic[Any, Any, (SetPiece, List[SetPiece]), GetError, SetError, (GetPiece, List[GetPiece]), SetWhole] =
+        self >>> Optic.cons
+    }
 
     /**
-     * Accesses the `::` case of a `List`.
+     * Provides implicit syntax for accessing a filtered subset of a chunk
+     * accessed by a partially applied optic.
      */
-    final def cons
-      : Optic[Any, Any, (SetPiece, List[SetPiece]), GetError, SetError, (GetPiece, List[GetPiece]), SetWhole] =
-      self >>> Optic.cons
-  }
-
-  /**
-   * Provides implicit syntax for accessing a filtered subset of a chunk
-   * accessed by a partially applied optic.
-   */
-  implicit class FilterPartiallyAppliedSyntax[
-    GetError >: OpticFailure,
-    SetError >: GetError,
-    Piece,
-    Whole
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      Chunk[Piece],
-      GetError,
-      SetError,
-      Chunk[Piece],
+    implicit class FilterPartiallyAppliedSyntax[
+      GetError >: OpticFailure,
+      SetError >: GetError,
+      Piece,
       Whole
-    ]
-  ) {
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        Chunk[Piece],
+        GetError,
+        SetError,
+        Chunk[Piece],
+        Whole
+      ]
+    ) {
+
+      /**
+       * Accesses a filtered subset of a chunk.
+       */
+      final def filter(f: Piece => Boolean): Optic[Any, Any, Chunk[Piece], GetError, SetError, Chunk[Piece], Whole] =
+        self >>> Optic.filter(f)
+    }
 
     /**
-     * Accesses a filtered subset of a chunk.
+     * Provides implicit syntax for accessing the first element of a tuple
+     * accessed by a partially applied optic.
      */
-    final def filter(f: Piece => Boolean): Optic[Any, Any, Chunk[Piece], GetError, SetError, Chunk[Piece], Whole] =
-      self >>> Optic.filter(f)
-  }
-
-  /**
-   * Provides implicit syntax for accessing the first element of a tuple
-   * accessed by a partially applied optic.
-   */
-  implicit class FirstPartiallyAppliedSyntax[
-    SetPiece,
-    GetError,
-    SetError >: GetError,
-    GetPiece,
-    Whole,
-    Piece2
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      (SetPiece, Piece2),
+    implicit class FirstPartiallyAppliedSyntax[
+      SetPiece,
       GetError,
-      SetError,
-      (GetPiece, Piece2),
+      SetError >: GetError,
+      GetPiece,
+      Whole,
+      Piece2
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        (SetPiece, Piece2),
+        GetError,
+        SetError,
+        (GetPiece, Piece2),
+        Whole
+      ]
+    ) {
+
+      /**
+       * Accesses the first element of a tuple.
+       */
+      final def first: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, Whole] =
+        self >>> Optic.first
+    }
+
+    /**
+     * Provides implicit syntax for accessing the head of a list accessed by a
+     * partially applied optic.
+     */
+    implicit class HeadPartiallyAppliedSyntax[
+      GetError >: OpticFailure,
+      SetError >: GetError,
+      Piece,
       Whole
-    ]
-  ) {
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        List[Piece],
+        GetError,
+        SetError,
+        List[Piece],
+        Whole
+      ]
+    ) {
+
+      /**
+       * Accesses the head of a list.
+       */
+      final def head: Optic[Any, Any, Piece, GetError, SetError, Piece, Whole] =
+        self >>> Optic.head
+    }
 
     /**
-     * Accesses the first element of a tuple.
+     * Provides implicit syntax for accessing the value at the specified key in a
+     * map accessed by a partially applied optic.
      */
-    final def first: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, Whole] =
-      self >>> Optic.first
-  }
-
-  /**
-   * Provides implicit syntax for accessing the head of a list accessed by a
-   * partially applied optic.
-   */
-  implicit class HeadPartiallyAppliedSyntax[
-    GetError >: OpticFailure,
-    SetError >: GetError,
-    Piece,
-    Whole
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      List[Piece],
-      GetError,
-      SetError,
-      List[Piece],
+    implicit class KeyPartiallyAppliedSyntax[
+      GetError >: OpticFailure,
+      SetError >: GetError,
+      Key,
+      Value,
       Whole
-    ]
-  ) {
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        Map[Key, Value],
+        GetError,
+        SetError,
+        Map[Key, Value],
+        Whole
+      ]
+    ) {
+
+      /**
+       * Accesses the value at the specified key in a map.
+       */
+      final def key(k: Key): Optic[Any, Any, Value, GetError, SetError, Value, Whole] =
+        self >>> Optic.key(k)
+    }
 
     /**
-     * Accesses the head of a list.
+     * Provides implicit syntax for accessing the `Left` case of an `Either`
+     * accessed by a partially applied optic.
      */
-    final def head: Optic[Any, Any, Piece, GetError, SetError, Piece, Whole] =
-      self >>> Optic.head
-  }
-
-  /**
-   * Provides implicit syntax for accessing the value at the specified key in a
-   * map accessed by a partially applied optic.
-   */
-  implicit class KeyPartiallyAppliedSyntax[
-    GetError >: OpticFailure,
-    SetError >: GetError,
-    Key,
-    Value,
-    Whole
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      Map[Key, Value],
-      GetError,
+    implicit class LeftPartiallyAppliedSyntax[
+      SetPiece,
+      GetError >: OpticFailure,
       SetError,
-      Map[Key, Value],
+      GetPiece,
+      SetWhole,
+      Piece2
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        Either[SetPiece, Piece2],
+        GetError,
+        SetError,
+        Either[GetPiece, Piece2],
+        SetWhole
+      ]
+    ) {
+
+      /**
+       * Accesses the `Left` case of an `Either`.
+       */
+      final def left: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, SetWhole] =
+        self >>> Optic.left
+    }
+
+    /**
+     * Provides implicit syntax for accessing the `None` case of an `Option`
+     * accessed by a partially applied optic.
+     */
+    implicit class NonePartiallyAppliedSyntax[GetError >: OpticFailure, SetError, Piece, SetWhole](
+      private val self: OpticPartiallyApplied[Option[Piece], GetError, SetError, Option[Piece], SetWhole]
+    ) {
+
+      /**
+       * Accesses the `None` case of an `Option`.
+       */
+      final def none: Optic[Any, Any, Unit, GetError, SetError, Unit, SetWhole] =
+        self >>> Optic.none
+    }
+
+    /**
+     * Provides implicit syntax for accessing the `Right` case of an `Either`
+     * accessed by a partially applied optic.
+     */
+    implicit class RightPartiallyAppliedSyntax[
+      SetPiece,
+      GetError >: OpticFailure,
+      SetError,
+      GetPiece,
+      SetWhole,
+      Piece2
+    ](
+      private val self: OpticPartiallyApplied[
+        Either[Piece2, SetPiece],
+        GetError,
+        SetError,
+        Either[Piece2, GetPiece],
+        SetWhole
+      ]
+    ) {
+
+      /**
+       * Accesses the `Right` case of an `Either`.
+       */
+      final def right: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, SetWhole] =
+        self >>> Optic.right
+    }
+
+    /**
+     * Provides implicit syntax for accessing the second element of a tuple
+     * accessed by a partially applied optic.
+     */
+    implicit class SecondPartiallyAppliedSyntax[
+      SetPiece,
+      GetError,
+      SetError >: GetError,
+      GetPiece,
+      Whole,
+      Piece2
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        (Piece2, SetPiece),
+        GetError,
+        SetError,
+        (Piece2, GetPiece),
+        Whole
+      ]
+    ) {
+
+      /**
+       * Accesses the second element of a tuple.
+       */
+      final def second: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, Whole] =
+        self >>> Optic.second
+    }
+
+    /**
+     * Provides implicit syntax for accessing a slice of a chunk accessed by a
+     * partially applied optic.
+     */
+    implicit class SlicePartiallyAppliedSyntax[
+      GetError >: OpticFailure,
+      SetError >: GetError,
+      Piece,
       Whole
-    ]
-  ) {
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        Chunk[Piece],
+        GetError,
+        SetError,
+        Chunk[Piece],
+        Whole
+      ]
+    ) {
+
+      /**
+       * Accesses a slice of a chunk.
+       */
+      final def slice(from: Int, until: Int): Optic[Any, Any, Chunk[Piece], GetError, SetError, Chunk[Piece], Whole] =
+        self >>> Optic.slice(from, until)
+    }
 
     /**
-     * Accesses the value at the specified key in a map.
+     * Provides implicit syntax for accessing the `Some` case of an `Option`
+     * accessed by a partially applied optic.
      */
-    final def key(k: Key): Optic[Any, Any, Value, GetError, SetError, Value, Whole] =
-      self >>> Optic.key(k)
-  }
+    implicit class SomePartiallyAppliedSyntax[SetPiece, GetError >: OpticFailure, SetError, GetPiece, SetWhole](
+      private val self: OpticPartiallyApplied[Option[SetPiece], GetError, SetError, Option[GetPiece], SetWhole]
+    ) {
 
-  /**
-   * Provides implicit syntax for accessing the `Left` case of an `Either`
-   * accessed by a partially applied optic.
-   */
-  implicit class LeftPartiallyAppliedSyntax[
-    SetPiece,
-    GetError >: OpticFailure,
-    SetError,
-    GetPiece,
-    SetWhole,
-    Piece2
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      Either[SetPiece, Piece2],
-      GetError,
-      SetError,
-      Either[GetPiece, Piece2],
-      SetWhole
-    ]
-  ) {
+      /**
+       * Accesses the `Some` case of an `Option`.
+       */
+      final def some: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, SetWhole] =
+        self >>> Optic.some
+    }
 
     /**
-     * Accesses the `Left` case of an `Either`.
+     * Provides implicit syntax for accessing the tail of a list accessed by a
+     * partially applied optic.
      */
-    final def left: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, SetWhole] =
-      self >>> Optic.left
-  }
-
-  /**
-   * Provides implicit syntax for accessing the `None` case of an `Option`
-   * accessed by a partially applied optic.
-   */
-  implicit class NonePartiallyAppliedSyntax[GetError >: OpticFailure, SetError, Piece, SetWhole](
-    private val self: OpticPartiallyApplied[Option[Piece], GetError, SetError, Option[Piece], SetWhole]
-  ) {
-
-    /**
-     * Accesses the `None` case of an `Option`.
-     */
-    final def none: Optic[Any, Any, Unit, GetError, SetError, Unit, SetWhole] =
-      self >>> Optic.none
-  }
-
-  /**
-   * Provides implicit syntax for accessing the `Right` case of an `Either`
-   * accessed by a partially applied optic.
-   */
-  implicit class RightPartiallyAppliedSyntax[
-    SetPiece,
-    GetError >: OpticFailure,
-    SetError,
-    GetPiece,
-    SetWhole,
-    Piece2
-  ](
-    private val self: OpticPartiallyApplied[
-      Either[Piece2, SetPiece],
-      GetError,
-      SetError,
-      Either[Piece2, GetPiece],
-      SetWhole
-    ]
-  ) {
-
-    /**
-     * Accesses the `Right` case of an `Either`.
-     */
-    final def right: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, SetWhole] =
-      self >>> Optic.right
-  }
-
-  /**
-   * Provides implicit syntax for accessing the second element of a tuple
-   * accessed by a partially applied optic.
-   */
-  implicit class SecondPartiallyAppliedSyntax[
-    SetPiece,
-    GetError,
-    SetError >: GetError,
-    GetPiece,
-    Whole,
-    Piece2
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      (Piece2, SetPiece),
-      GetError,
-      SetError,
-      (Piece2, GetPiece),
+    implicit class TailPartiallyAppliedSyntax[
+      GetError >: OpticFailure,
+      SetError >: GetError,
+      Piece,
       Whole
-    ]
-  ) {
+    ](
+      private val self: Optic[
+        Any,
+        Any,
+        List[Piece],
+        GetError,
+        SetError,
+        List[Piece],
+        Whole
+      ]
+    ) {
 
-    /**
-     * Accesses the second element of a tuple.
-     */
-    final def second: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, Whole] =
-      self >>> Optic.second
-  }
-
-  /**
-   * Provides implicit syntax for accessing a slice of a chunk accessed by a
-   * partially applied optic.
-   */
-  implicit class SlicePartiallyAppliedSyntax[
-    GetError >: OpticFailure,
-    SetError >: GetError,
-    Piece,
-    Whole
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      Chunk[Piece],
-      GetError,
-      SetError,
-      Chunk[Piece],
-      Whole
-    ]
-  ) {
-
-    /**
-     * Accesses a slice of a chunk.
-     */
-    final def slice(from: Int, until: Int): Optic[Any, Any, Chunk[Piece], GetError, SetError, Chunk[Piece], Whole] =
-      self >>> Optic.slice(from, until)
-  }
-
-  /**
-   * Provides implicit syntax for accessing the `Some` case of an `Option`
-   * accessed by a partially applied optic.
-   */
-  implicit class SomePartiallyAppliedSyntax[SetPiece, GetError >: OpticFailure, SetError, GetPiece, SetWhole](
-    private val self: OpticPartiallyApplied[Option[SetPiece], GetError, SetError, Option[GetPiece], SetWhole]
-  ) {
-
-    /**
-     * Accesses the `Some` case of an `Option`.
-     */
-    final def some: Optic[Any, Any, SetPiece, GetError, SetError, GetPiece, SetWhole] =
-      self >>> Optic.some
-  }
-
-  /**
-   * Provides implicit syntax for accessing the tail of a list accessed by a
-   * partially applied optic.
-   */
-  implicit class TailPartiallyAppliedSyntax[
-    GetError >: OpticFailure,
-    SetError >: GetError,
-    Piece,
-    Whole
-  ](
-    private val self: Optic[
-      Any,
-      Any,
-      List[Piece],
-      GetError,
-      SetError,
-      List[Piece],
-      Whole
-    ]
-  ) {
-
-    /**
-     * Accesses the tail of a list.
-     */
-    final def tail: Optic[Any, Any, List[Piece], GetError, SetError, List[Piece], Whole] =
-      self >>> Optic.tail
+      /**
+       * Accesses the tail of a list.
+       */
+      final def tail: Optic[Any, Any, List[Piece], GetError, SetError, List[Piece], Whole] =
+        self >>> Optic.tail
+    }
   }
 }
