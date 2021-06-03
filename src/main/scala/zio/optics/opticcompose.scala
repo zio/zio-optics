@@ -53,28 +53,28 @@ trait OpticComposeModule { self: OpticFailureModule with OpticModule with OpticR
                     right
                       .getOptic(getPiece)
                       .foldM(
-                        { case (getError1, setPiece) =>
+                        { case (getError, setPiece) =>
                           left
                             .setOptic(setPiece)(getWhole)
                             .foldM(
-                              { case (_, setWholeAfter) => fail((getError1, setWholeAfter)) },
-                              setWholeAfter => fail((getError1, setWholeAfter))
+                              { case (_, setWholeAfter) => fail((getError, setWholeAfter)) },
+                              setWholeAfter => fail((getError, setWholeAfter))
                             )
                         },
-                        getPiece1 => succeed(getPiece1)
+                        getPiece => succeed(getPiece)
                       )
                 ),
-            setPiece1 =>
+            setPiece =>
               setWholeBefore =>
                 right
-                  .setOptic(setPiece1)(())
+                  .setOptic(setPiece)(())
                   .foldM(
-                    { case (setError1, setPiece) =>
+                    { case (setError, setPiece) =>
                       left
                         .setOptic(setPiece)(setWholeBefore)
                         .foldM(
-                          { case (_, setWholeAfter) => fail((setError1, setWholeAfter)) },
-                          setWholeAfter => fail((setError1, setWholeAfter))
+                          { case (_, setWholeAfter) => fail((setError, setWholeAfter)) },
+                          setWholeAfter => fail((setError, setWholeAfter))
                         )
                     },
                     setPiece => left.setOptic(setPiece)(setWholeBefore)
@@ -114,18 +114,18 @@ trait OpticComposeModule { self: OpticFailureModule with OpticModule with OpticR
                     right
                       .getOptic(getPiece)
                       .foldM(
-                        { case (getError1, setPiece) =>
+                        { case (getError, setPiece) =>
                           left
                             .setOptic(setPiece)(getWhole)
                             .foldM(
-                              { case (_, setWholeAfter) => fail((getError1, setWholeAfter)) },
-                              setWholeAfter => fail((getError1 -> setWholeAfter))
+                              { case (_, setWholeAfter) => fail((getError, setWholeAfter)) },
+                              setWholeAfter => fail((getError -> setWholeAfter))
                             )
                         },
                         a => succeed(a)
                       )
                 ),
-            setPiece1 =>
+            setPiece =>
               setWhole =>
                 left
                   .getOptic(setWhole)
@@ -133,14 +133,14 @@ trait OpticComposeModule { self: OpticFailureModule with OpticModule with OpticR
                     { case (getError, setWholeAfter) => fail((getError, setWholeAfter)) },
                     getPiece =>
                       right
-                        .setOptic(setPiece1)(getPiece)
+                        .setOptic(setPiece)(getPiece)
                         .foldM(
-                          { case (setError1, setPiece) =>
+                          { case (setError, setPiece) =>
                             left
                               .setOptic(setPiece)(setWhole)
                               .foldM(
-                                { case (_, setWholeAfter) => fail((setError1, setWholeAfter)) },
-                                setWholeAfter => fail((setError1, setWholeAfter))
+                                { case (_, setWholeAfter) => fail((setError, setWholeAfter)) },
+                                setWholeAfter => fail((setError, setWholeAfter))
                               )
                           },
                           setPiece => left.setOptic(setPiece)(setWhole)
