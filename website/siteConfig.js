@@ -22,7 +22,7 @@ const users = [
 
 const siteConfig = {
   title: 'ZIO Optics',
-  tagline: 'TODO: Tagline',
+  tagline: 'Easily Modify Parts Of Larger Data Structures',
   url: 'https://zio.github.io',
   baseUrl: '/zio-optics/',
 
