@@ -442,17 +442,29 @@ trait OpticModule {
                 .getOptic(setWholeBefore)
                 .foldM(
                   { case (getError, setWholeAfter) => fail((getError, setWholeAfter)) },
-                  getPieces =>
-                    self
-                      .foreach(getPieces.zip(setPieces)) { case (getPiece, setPiece) =>
-                        right
-                          .setOptic(setPiece)(getPiece)
-                          .foldM(
-                            { case (_, setWholeAfter) => succeed(setWholeAfter) },
-                            setPiece => succeed(setPiece)
-                          )
-                      }
-                      .flatMap(bs => left.setOptic(bs)(setWholeBefore))
+                  getPieces => {
+                    val builder           = succeed(ChunkBuilder.make[SetPiece]())
+                    val setPiecesIterator = setPieces.iterator
+                    val getPiecesIterator = getPieces.iterator
+                    while (getPiecesIterator.hasNext) {
+                      val getPiece = getPiecesIterator.next()
+                      right
+                        .getOptic(getPiece)
+                        .foldM(
+                          { case (_, setPiece) => builder.map(_ += setPiece) },
+                          _ => {
+                            val setPiece = setPiecesIterator.next()
+                            right
+                              .setOptic(setPiece)(getPiece)
+                              .foldM(
+                                { case (_, setPiece) => builder.map(_ += setPiece) },
+                                setPiece => builder.map(_ += setPiece)
+                              )
+                          }
+                        )
+                    }
+                    builder.map(_.result()).flatMap(left.setOptic(_)(setWholeBefore))
+                  }
                 )
         )
     }
