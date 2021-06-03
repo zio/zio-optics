@@ -17,6 +17,7 @@ object BuildHelper {
     list.map(v => (v.split('.').take(2).mkString("."), v)).toMap
   }
 
+  private val Scala211   = versions("2.11")
   private val Scala212   = versions("2.12")
   private val Scala213   = versions("2.13")
   private val ScalaDotty = versions("3.0")
@@ -79,6 +80,21 @@ object BuildHelper {
           "-Xmax-classfile-name",
           "242"
         ) ++ std2xOptions ++ optimizerOptions(optimize)
+      case Some((2, 11)) =>
+        Seq(
+          "-Ypartial-unification",
+          "-Yno-adapted-args",
+          "-Ywarn-inaccessible",
+          "-Ywarn-infer-any",
+          "-Ywarn-nullary-override",
+          "-Ywarn-nullary-unit",
+          "-Xexperimental",
+          "-Ywarn-unused-import",
+          "-Xfuture",
+          "-Xsource:2.13",
+          "-Xmax-classfile-name",
+          "242"
+        ) ++ std2xOptions
       case _ => Seq.empty
     }
 
@@ -91,7 +107,7 @@ object BuildHelper {
 
   def stdSettings(prjName: String) = Seq(
     name := s"$prjName",
-    crossScalaVersions := Seq(Scala212, Scala213, ScalaDotty),
+    crossScalaVersions := Seq(Scala211, Scala212, Scala213, ScalaDotty),
     ThisBuild / scalaVersion := Scala212,
     scalacOptions := stdOptions ++ extraOptions(scalaVersion.value, optimize = !isSnapshot.value),
     libraryDependencies ++= {
