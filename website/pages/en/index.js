@@ -97,11 +97,11 @@ class Index extends React.Component {
                 style={{textAlign: 'center'}}>
                 <h2>Welcome to ZIO Optics</h2>
                 <MarkdownBlock>
-                    TODO: Tagline
+                    ZIO Optics is a library that makes it easy to modify parts of larger data structures based on a single representation of an optic as a combination of a getter and setter
                 </MarkdownBlock>
 
                 <MarkdownBlock>
-                    TODO: Long description (paragraph)
+                    ZIO Optics features a unified representation of optics, deep ZIO integration, helpful error messages, zero dependencies, and no unnecessary abstractions
                 </MarkdownBlock>
             </div>
         );
@@ -110,16 +110,16 @@ class Index extends React.Component {
             <Block layout="fourColumn">
                 {[
                     {
-                        content: 'TODO: Content 1',
+                        content: 'All optics compose the same way because they are all instances of the same data type',
                         image: `${baseUrl}img/undraw_tweetstorm.svg`,
                         imageAlign: 'top',
-                        title: 'TODO: Title 1',
+                        title: 'Unified Representation Of Optics',
                     },
                     {
-                        content: 'TODO: Content 2',
+                        content: 'Represent effectual and transactional optics that work with ZIO data structures like Ref and TMap',
                         image: `${baseUrl}img/undraw_operating_system.svg`,
                         imageAlign: 'top',
-                        title: 'TODO: Title 2',
+                        title: 'Deep ZIO Integration',
                     },
                 ]}
             </Block>

@@ -1,4 +1,4 @@
-# zio-optics
+# ZIO Optics
 
 | CI | Release | Snapshot | Discord |
 | --- | --- | --- | --- |

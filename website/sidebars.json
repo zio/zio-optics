@@ -1,7 +1,12 @@
 {
   "overview-sidebar": {
     "Overview": [
-      "overview/overview_index"
+      "overview/overview_index",
+      "overview/overview_understanding_optics",
+      "overview/overview_constructing_optics",
+      "overview/overview_composing_optics",
+      "overview/overview_using_optics",
+      "overview/overview_effectual_optics"
     ]
   },
   "usecases-sidebar": {
