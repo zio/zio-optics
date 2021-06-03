@@ -58,7 +58,7 @@ trait OpticResultModule { self =>
    */
   protected final def foreach[E, A, B](iterable: Iterable[A])(f: A => OpticResult[E, B]): OpticResult[E, Chunk[B]] =
     iterable
-      .foldLeft[OpticResult[E, ChunkBuilder[B]]](succeed(ChunkBuilder.make[B]))((builder, a) =>
+      .foldLeft[OpticResult[E, ChunkBuilder[B]]](succeed(ChunkBuilder.make[B]()))((builder, a) =>
         builder.zipWith(f(a))(_ += _)
       )
       .map(_.result())
