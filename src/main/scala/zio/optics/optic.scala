@@ -161,7 +161,7 @@ trait OpticModule {
         s => succeed(Chunk.fromIterable(s.filter(f))),
         as =>
           s => {
-            val builder       = ChunkBuilder.make[A]
+            val builder       = ChunkBuilder.make[A]()
             val leftIterator  = s.iterator
             val rightIterator = as.iterator
             while (leftIterator.hasNext && rightIterator.hasNext) {
