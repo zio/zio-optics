@@ -38,4 +38,14 @@ val io: IO[OpticFailure, Unit] =
   ref.key("key").right.at(0).update(_ + 1)
 ```
 
+You can use this dot syntax with ordinary values using the `optic` operator.
+
+```scala mdoc:compile-only
+val map: Map[String, Either[String, Chunk[Int]]] =
+  ???
+
+val updated: Either[OpticFailure, Map[String, Either[String, Chunk[Int]]]] =
+  map.optic.key("key").right.at(0).update(_ + 1)
+```
+
 Note that this syntax is currently only available for optics defined in ZIO Optics. When automatic derivation of optics is introduced this syntax will be supported for user defined data structures as well.
