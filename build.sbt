@@ -11,6 +11,12 @@ inThisBuild(
         "John De Goes",
         "john@degoes.net",
         url("http://degoes.net")
+      ),
+      Developer(
+        "adamgfraser",
+        "Adam Fraser",
+        "adam.fraser@gmail.com",
+        url("https://github.com/adamgfraser")
       )
     ),
     pgpPassphrase := sys.env.get("PGP_PASSWORD").map(_.toArray),
