@@ -1,12 +1,12 @@
 package zio.optics
 
 import zio._
-import zio.test._
 import zio.test.Assertion._
+import zio.test._
 
 object LensSpec extends DefaultRunnableSpec {
 
-  def spec = suite("LensSpec")(
+  def spec: ZSpec[Environment, Failure] = suite("LensSpec")(
     suite("constructors")(
       testM("first")(lensLaws(Gen.anyInt.zip(Gen.anyInt), Gen.anyInt)(Lens.first)),
       testM("second")(lensLaws(Gen.anyInt.zip(Gen.anyInt), Gen.anyInt)(Lens.second))

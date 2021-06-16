@@ -1,12 +1,12 @@
 package zio.optics
 
 import zio._
-import zio.test._
 import zio.test.Assertion._
+import zio.test._
 
 object PrismSpec extends DefaultRunnableSpec {
 
-  def spec = suite("PrismSpec")(
+  def spec: ZSpec[Environment, Failure] = suite("PrismSpec")(
     suite("constructors")(
       testM("cons")(prismLaws(Gen.listOf(Gen.anyInt), Gen.anyInt.zip(Gen.listOf(Gen.anyInt)))(Prism.cons)),
       testM("first")(prismLaws(Gen.either(Gen.anyInt, Gen.anyInt), Gen.anyInt)(Prism.left)),

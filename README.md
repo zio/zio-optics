@@ -2,7 +2,7 @@
 
 | Project Stage | CI | Release | Snapshot | Discord |
 | --- | --- | --- | --- | --- |
-| [![Project stage][Stage]][Stage-Page] | ![CI][Badge-CI] | [![Release Artifacts][Badge-SonatypeReleases]][Link-SonatypeReleases] | [![Snapshot Artifacts][Badge-SonatypeSnapshots]][Link-SonatypeSnapshots] | [![Badge-Discord]][Link-Discord] |
+| [![Project stage][Badge-Stage]][Link-Stage-Page] | ![CI][Badge-CI] | [![Release Artifacts][Badge-SonatypeReleases]][Link-SonatypeReleases] | [![Snapshot Artifacts][Badge-SonatypeSnapshots]][Link-SonatypeSnapshots] | [![Badge-Discord]][Link-Discord] |
 
 # Summary
 
@@ -43,5 +43,6 @@ Come chat with us on [![Badge-Discord]][Link-Discord].
 [Link-SonatypeReleases]: https://oss.sonatype.org/content/repositories/releases/dev/zio/zio-optics_2.12/ "Sonatype Releases"
 [Link-SonatypeSnapshots]: https://oss.sonatype.org/content/repositories/snapshots/dev/zio/zio-optics_2.12/ "Sonatype Snapshots"
 [Link-Discord]: https://discord.gg/2ccFBr4 "Discord"
-[Stage]: https://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
-[Stage-Page]: https://github.com/zio/zio/wiki/Project-Stages
+[Badge-Stage]: https://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
+[Link-Stage-Page]: https://github.com/zio/zio/wiki/Project-Stages
+

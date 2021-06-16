@@ -4,7 +4,7 @@ import zio.test._
 
 object ComposeTypeInferenceSpec extends DefaultRunnableSpec {
 
-  def spec = suite("ComposeTypeInferenceSpec")(
+  def spec: ZSpec[Environment, Failure] = suite("ComposeTypeInferenceSpec")(
     test("the composition of an iso and a prism is a prism") {
       lazy val a: ZIso[S, T, A, B]   = ???
       lazy val b: ZPrism[A, B, C, D] = ???

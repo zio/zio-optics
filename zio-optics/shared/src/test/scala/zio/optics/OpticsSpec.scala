@@ -1,12 +1,12 @@
 package zio.optics
 
 import zio._
-import zio.test._
 import zio.test.Assertion._
+import zio.test._
 
 object OpticsSpec extends DefaultRunnableSpec {
 
-  def spec = suite("OpticsSpec")(
+  def spec: ZSpec[Environment, Failure] = suite("OpticsSpec")(
     suite("optics")(
       suite("lens")(
         testM("set and get") {
