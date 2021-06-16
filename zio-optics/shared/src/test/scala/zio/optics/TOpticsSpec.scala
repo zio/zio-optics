@@ -2,8 +2,8 @@ package zio.optics
 
 import zio.optics.toptics._
 import zio.stm._
-import zio.test._
 import zio.test.Assertion._
+import zio.test._
 
 object TOpticsSpec extends DefaultRunnableSpec {
 

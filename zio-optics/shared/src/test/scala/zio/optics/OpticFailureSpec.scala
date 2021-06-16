@@ -1,11 +1,11 @@
 package zio.optics
 
-import zio.test._
 import zio.test.Assertion._
+import zio.test._
 
 object OpticFailureSpec extends DefaultRunnableSpec {
 
-  def spec = suite("OpticFailureSpec")(
+  def spec: ZSpec[Environment, Failure] = suite("OpticFailureSpec")(
     suite("error reporting")(
       test("should report error with prism") {
         val whole                               = Right(42)

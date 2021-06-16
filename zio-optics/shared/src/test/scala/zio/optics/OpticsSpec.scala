@@ -1,12 +1,22 @@
 package zio.optics
 
 import zio._
-import zio.test._
+import zio.blocking.Blocking
+import zio.clock.Clock
+import zio.random.Random
 import zio.test.Assertion._
+import zio.test._
+import zio.test.environment.{Live, TestClock, TestConsole, TestRandom, TestSystem}
 
 object OpticsSpec extends DefaultRunnableSpec {
 
-  def spec = suite("OpticsSpec")(
+  def spec: Spec[Has[Annotations.Service] with Has[Live.Service] with Has[Sized.Service] with Has[
+    TestClock.Service
+  ] with Has[TestConfig.Service] with Has[TestConsole.Service] with Has[TestRandom.Service] with Has[
+    TestSystem.Service
+  ] with Has[Clock.Service] with Has[zio.console.Console.Service] with Has[zio.system.System.Service] with Has[
+    Random.Service
+  ] with Has[Blocking.Service], TestFailure[Any], TestSuccess] = suite("OpticsSpec")(
     suite("optics")(
       suite("lens")(
         testM("set and get") {

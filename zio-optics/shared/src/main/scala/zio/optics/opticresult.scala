@@ -48,7 +48,7 @@ trait OpticResultModule { self =>
    */
   protected final def collectAllSuccesses[E, A](
     iterable: Iterable[OpticResult[E, A]]
-  ): OpticResult[Nothing, Chunk[A]] =
+  ): OpticResult[Nothing, Chunk[A]]                                                                                =
     foreach(iterable)(_.foldM(e => succeed(Left(e)), a => succeed(Right(a)))).map(_.collect { case Right(a) => a })
 
   /**
