@@ -70,7 +70,9 @@ package object opticsm
     /**
      * Accesses a term of a sum type.
      */
-    final def accessCase[EC >: EA, ED >: EB, C, D](optic: Optic[B, Any, C, ED, EC, D, A]): ZRef.Synchronized[RA, RB, EC, ED, C, D] =
+    final def accessCase[EC >: EA, ED >: EB, C, D](
+      optic: Optic[B, Any, C, ED, EC, D, A]
+    ): ZRef.Synchronized[RA, RB, EC, ED, C, D] =
       self.foldZIO(
         identity,
         identity,
