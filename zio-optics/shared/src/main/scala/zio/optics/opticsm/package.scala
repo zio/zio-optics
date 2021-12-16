@@ -27,8 +27,8 @@ package object opticsm
     IO.succeed(a)
 
   /**
-   * Providing implicit syntax for accessing pieces of a value in a `ZRefM`
-   * when the error types are unified.
+   * Providing implicit syntax for accessing pieces of a value in a
+   * `ZRef.Synchronized` when the error types are unified.
    */
 
   implicit class ERefMSyntax[RA, RB, EA >: EB, EB, A, B](private val self: ZRef.Synchronized[RA, RB, EA, EB, A, B]) {
@@ -63,9 +63,12 @@ package object opticsm
   }
 
   /**
-   * Providing implicit syntax for accessing pieces of a value in a `ZRefM`.
+   * Providing implicit syntax for accessing pieces of a value in a
+   * `ZRef.Synchronized`.
    */
-  implicit class ZRefMSyntax[RA, RB, EA, EB, A, B](private val self: ZRef.Synchronized[RA, RB, EA, EB, A, B]) {
+  implicit class ZRefSynchronizedSyntax[RA, RB, EA, EB, A, B](
+    private val self: ZRef.Synchronized[RA, RB, EA, EB, A, B]
+  ) {
 
     /**
      * Accesses a term of a sum type.
@@ -83,9 +86,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the specified index of a chunk in a
-   * `ZRefM`.
+   * `ZRef.Synchronized`.
    */
-  implicit class AtZRefMSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
+  implicit class AtZRefSynchronizedSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, Chunk[A], Chunk[A]]
   ) {
 
@@ -98,9 +101,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the `::` case of a `List` in a
-   * `ZRefM`.
+   * `ZRef.Synchronized`.
    */
-  implicit class ConsZRefMSyntax[RA, RB, EA, EB >: OpticFailure, A](
+  implicit class ConsZRefSynchronizedSyntax[RA, RB, EA, EB >: OpticFailure, A](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, List[A], List[A]]
   ) {
 
@@ -113,9 +116,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing a filtered subset of a chunk in a
-   * `ZRefM`.
+   * `ZRef.Synchronized`.
    */
-  implicit class FilterZRefMSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
+  implicit class FilterZRefSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, Chunk[A], Chunk[A]]
   ) {
 
@@ -128,9 +131,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the first element of a tuple in a
-   * `ZRefM`.
+   * `ZRef.Synchronized`.
    */
-  implicit class FirstZRefMSyntax[RA, RB, EA >: EB, EB, A, B, C](
+  implicit class FirstZRefSynchronizedSyntax[RA, RB, EA >: EB, EB, A, B, C](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, (C, B), (A, B)]
   ) {
 
@@ -142,9 +145,10 @@ package object opticsm
   }
 
   /**
-   * Provides implicit syntax for accessing the head of a list in a `ZRefM`.
+   * Provides implicit syntax for accessing the head of a list in a
+   * `ZRef.Synchronized`.
    */
-  implicit class HeadZRefMSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
+  implicit class HeadZRefSynchronizedSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, List[A], List[A]]
   ) {
 
@@ -157,9 +161,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the value at the specified key in a
-   * map in a `ZRefM`.
+   * map in a `ZRef.Synchronized`.
    */
-  implicit class KeyZRefMSyntax[RA, RB, EA >: EB, EB >: OpticFailure, K, V](
+  implicit class KeyZRefSynchronizedSyntax[RA, RB, EA >: EB, EB >: OpticFailure, K, V](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, Map[K, V], Map[K, V]]
   ) {
 
@@ -172,9 +176,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the `Left` case of an `Either` in a
-   * `ZRefM`.
+   * `ZRef.Synchronized`.
    */
-  implicit class LeftZRefMSyntax[RA, RB, EA, EB >: OpticFailure, A, B, C](
+  implicit class LeftZRefSynchronizedSyntax[RA, RB, EA, EB >: OpticFailure, A, B, C](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, Either[C, B], Either[A, B]]
   ) {
 
@@ -187,9 +191,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the `None` case of an `Option` in a
-   * `ZRefM`.
+   * `ZRef.Synchronized`.
    */
-  implicit class NoneZRefMSyntax[RA, RB, EA, EB >: OpticFailure, A](
+  implicit class NoneZRefSynchronizedSyntax[RA, RB, EA, EB >: OpticFailure, A](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, Option[A], Option[A]]
   ) {
 
@@ -202,9 +206,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the `Right` case of an `Either` in
-   * a `ZRefM`.
+   * a `ZRef.Synchronized`.
    */
-  implicit class RightZRefMSyntax[RA, RB, EA, EB >: OpticFailure, A, B, C](
+  implicit class RightZRefSynchronizedSyntax[RA, RB, EA, EB >: OpticFailure, A, B, C](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, Either[A, C], Either[A, B]]
   ) {
 
@@ -217,9 +221,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the second element of a tuple in a
-   * `ZRefM`.
+   * `ZRef.Synchronized`.
    */
-  implicit class SecondZRefMSyntax[RA, RB, EA >: EB, EB, A, B, C](
+  implicit class SecondZRefSynchronizedSyntax[RA, RB, EA >: EB, EB, A, B, C](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, (A, C), (A, B)]
   ) {
 
@@ -231,9 +235,10 @@ package object opticsm
   }
 
   /**
-   * Provides implicit syntax for accessing a slice of a chunk in a `ZRefM`.
+   * Provides implicit syntax for accessing a slice of a chunk in a
+   * `ZRef.Synchronized`.
    */
-  implicit class SliceZRefMSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
+  implicit class SliceZRefSynchronizedSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, Chunk[A], Chunk[A]]
   ) {
 
@@ -246,9 +251,9 @@ package object opticsm
 
   /**
    * Provides implicit syntax for accessing the `Some` case of an `Option` in a
-   * `ZRefM`.
+   * `ZRef.Synchronized`.
    */
-  implicit class SomeZRefMSyntax[RA, RB, EA, EB >: OpticFailure, A, B](
+  implicit class SomeZRefSynchronizedSyntax[RA, RB, EA, EB >: OpticFailure, A, B](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, Option[B], Option[A]]
   ) {
 
@@ -260,9 +265,10 @@ package object opticsm
   }
 
   /**
-   * Provides implicit syntax for accessing the tail of a list in a `ZRefM`.
+   * Provides implicit syntax for accessing the tail of a list in a
+   * `ZRef.Synchronized`.
    */
-  implicit class TailZRefMSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
+  implicit class TailZRefSynchronizedSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](
     private val self: ZRef.Synchronized[RA, RB, EA, EB, List[A], List[A]]
   ) {
 
