@@ -8,8 +8,8 @@ object LensSpec extends DefaultRunnableSpec {
 
   def spec: ZSpec[Environment, Failure] = suite("LensSpec")(
     suite("constructors")(
-      testM("first")(lensLaws(Gen.anyInt.zip(Gen.anyInt), Gen.anyInt)(Lens.first)),
-      testM("second")(lensLaws(Gen.anyInt.zip(Gen.anyInt), Gen.anyInt)(Lens.second))
+      test("first")(lensLaws(Gen.int.zip(Gen.int), Gen.int)(Lens.first)),
+      test("second")(lensLaws(Gen.int.zip(Gen.int), Gen.int)(Lens.second))
     )
   )
 

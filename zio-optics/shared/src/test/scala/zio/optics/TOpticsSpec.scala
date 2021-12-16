@@ -9,7 +9,7 @@ object TOpticsSpec extends DefaultRunnableSpec {
 
   def spec: ZSpec[Environment, Failure] =
     suite("TOpticsSpec")(
-      testM("TMap syntax") {
+      test("TMap syntax") {
         val transaction = for {
           map      <- TMap.empty[String, Either[String, Int]]
           _        <- map.put("foo", Right(42))

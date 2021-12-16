@@ -8,10 +8,10 @@ object PrismSpec extends DefaultRunnableSpec {
 
   def spec: ZSpec[Environment, Failure] = suite("PrismSpec")(
     suite("constructors")(
-      testM("cons")(prismLaws(Gen.listOf(Gen.anyInt), Gen.anyInt.zip(Gen.listOf(Gen.anyInt)))(Prism.cons)),
-      testM("first")(prismLaws(Gen.either(Gen.anyInt, Gen.anyInt), Gen.anyInt)(Prism.left)),
-      testM("second")(prismLaws(Gen.either(Gen.anyInt, Gen.anyInt), Gen.anyInt)(Prism.right)),
-      testM("some")(prismLaws(Gen.option(Gen.anyInt), Gen.anyInt)(Prism.some))
+      test("cons")(prismLaws(Gen.listOf(Gen.int), Gen.int.zip(Gen.listOf(Gen.int)))(Prism.cons)),
+      test("first")(prismLaws(Gen.either(Gen.int, Gen.int), Gen.int)(Prism.left)),
+      test("second")(prismLaws(Gen.either(Gen.int, Gen.int), Gen.int)(Prism.right)),
+      test("some")(prismLaws(Gen.option(Gen.int), Gen.int)(Prism.some))
     )
   )
 

@@ -9,8 +9,8 @@ object OpticsSpec extends DefaultRunnableSpec {
   def spec: ZSpec[Environment, Failure] = suite("OpticsSpec")(
     suite("optics")(
       suite("lens")(
-        testM("set and get") {
-          checkM(Gen.anyInt.zip(Gen.anyInt), Gen.anyInt) { (s, a) =>
+        test("set and get") {
+          check(Gen.int.zip(Gen.int), Gen.int) { (s, a) =>
             for {
               ref    <- Ref.make(s)
               derived = ref.first
@@ -19,8 +19,8 @@ object OpticsSpec extends DefaultRunnableSpec {
             } yield assert(value)(equalTo(a))
           }
         },
-        testM("get and set") {
-          checkM(Gen.anyInt.zip(Gen.anyInt)) { s =>
+        test("get and set") {
+          check(Gen.int.zip(Gen.int)) { s =>
             for {
               ref    <- Ref.make(s)
               derived = ref.first
@@ -30,8 +30,8 @@ object OpticsSpec extends DefaultRunnableSpec {
             } yield assert(value2)(equalTo(s))
           }
         },
-        testM("double set") {
-          checkM(Gen.anyInt.zip(Gen.anyInt), Gen.anyInt) { (s, a) =>
+        test("double set") {
+          check(Gen.int.zip(Gen.int), Gen.int) { (s, a) =>
             for {
               ref    <- Ref.make(s)
               derived = ref.first
@@ -44,7 +44,7 @@ object OpticsSpec extends DefaultRunnableSpec {
         }
       ),
       suite("optional")(
-        testM("modifies matching field") {
+        test("modifies matching field") {
           for {
             ref    <- Ref.make(Chunk(1, 2, 3, 4, 5))
             derived = ref.at(1)
@@ -54,8 +54,8 @@ object OpticsSpec extends DefaultRunnableSpec {
         }
       ),
       suite("prism")(
-        testM("set and get") {
-          checkM(Gen.either(Gen.anyInt, Gen.anyInt), Gen.anyInt) { (s, a) =>
+        test("set and get") {
+          check(Gen.either(Gen.int, Gen.int), Gen.int) { (s, a) =>
             for {
               ref    <- Ref.make(s)
               derived = ref.left
@@ -64,19 +64,19 @@ object OpticsSpec extends DefaultRunnableSpec {
             } yield assert(value)(equalTo(a))
           }
         },
-        testM("get and set") {
-          checkM(Gen.either(Gen.anyInt, Gen.anyInt)) { s =>
+        test("get and set") {
+          check(Gen.either(Gen.int, Gen.int)) { s =>
             for {
               ref    <- Ref.make(s)
               derived = ref.left
-              _      <- derived.get.foldM(_ => ZIO.unit, derived.set)
+              _      <- derived.get.foldZIO(_ => ZIO.unit, derived.set)
               value  <- ref.get
             } yield assert(value)(equalTo(s))
           }
         }
       ),
       suite("traversal")(
-        testM("modifies matching fields") {
+        test("modifies matching fields") {
           for {
             ref    <- Ref.make(Chunk(1, 2, 3, 4, 5))
             derived = ref.filter(_ % 2 == 0)
@@ -87,7 +87,7 @@ object OpticsSpec extends DefaultRunnableSpec {
       )
     ),
     suite("examples from documentation")(
-      testM("lens") {
+      test("lens") {
         case class Person(name: String, age: Int)
         def age: Lens[Person, Int] =
           Lens(person => Right(person.age), age => person => Right(person.copy(age = age)))
@@ -97,21 +97,21 @@ object OpticsSpec extends DefaultRunnableSpec {
           value <- ref.get
         } yield assert(value)(equalTo(Person("User", 43)))
       },
-      testM("prism") {
+      test("prism") {
         for {
           ref   <- Ref.make[Either[List[String], Int]](Left(Nil))
           _     <- ref.left.update("fail" :: _)
           value <- ref.get
         } yield assert(value)(isLeft(equalTo(List("fail"))))
       },
-      testM("optional") {
+      test("optional") {
         for {
           ref   <- Ref.make(Chunk(1, 2, 3))
           _     <- ref.at(2).set(4)
           value <- ref.get
         } yield assert(value)(equalTo(Chunk(1, 2, 4)))
       },
-      testM("traversal") {
+      test("traversal") {
         def negate(as: Chunk[Int]): Chunk[Int] =
           for (a <- as) yield -a
         for {

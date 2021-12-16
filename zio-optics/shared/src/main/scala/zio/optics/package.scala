@@ -25,14 +25,14 @@ package object optics extends Optics {
    * Providing implicit syntax for accessing pieces of a value in a `ZRef`
    * when the error types are unified.
    */
-  implicit class ERefSyntax[EA >: EB, EB, A, B](private val self: ZRef[EA, EB, A, B]) {
+  implicit class ERefSyntax[RA, RB, EA >: EB, EB, A, B](private val self: ZRef[RA, RB, EA, EB, A, B]) {
 
     /**
      * Accesses some of the elements of a collection.
      */
     def accessElements[EC >: EA, ED >: EB, C, D](
       optic: Optic[B, B, Chunk[C], ED, EC, Chunk[D], A]
-    ): ZRef[EC, ED, Chunk[C], Chunk[D]] =
+    ): ZRef[RA with RB, RB, EC, ED, Chunk[C], Chunk[D]] =
       self.foldAll(
         identity,
         identity,
@@ -44,7 +44,7 @@ package object optics extends Optics {
     /**
      * Accesses a field of a product type.
      */
-    def accessField[EC >: EA, ED >: EB, C, D](optic: Optic[B, B, C, ED, EC, D, A]): ZRef[EC, ED, C, D] =
+    def accessField[EC >: EA, ED >: EB, C, D](optic: Optic[B, B, C, ED, EC, D, A]): ZRef[RA with RB, RB, EC, ED, C, D] =
       self.foldAll(
         identity,
         identity,
@@ -57,12 +57,12 @@ package object optics extends Optics {
   /**
    * Providing implicit syntax for accessing pieces of a value in a `ZRef`.
    */
-  implicit class ZRefSyntax[EA, EB, A, B](private val self: ZRef[EA, EB, A, B]) {
+  implicit class ZRefSyntax[RA, RB, EA, EB, A, B](private val self: ZRef[RA, RB, EA, EB, A, B]) {
 
     /**
      * Accesses a term of a sum type.
      */
-    final def accessCase[EC >: EA, ED >: EB, C, D](optic: Optic[B, Any, C, ED, EC, D, A]): ZRef[EC, ED, C, D] =
+    final def accessCase[EC >: EA, ED >: EB, C, D](optic: Optic[B, Any, C, ED, EC, D, A]): ZRef[RA, RB, EC, ED, C, D] =
       self.fold(
         identity,
         identity,
@@ -75,12 +75,12 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the specified index of a chunk in a
    * `ZRef`.
    */
-  implicit class AtZRefSyntax[EA >: EB, EB >: OpticFailure, A](private val self: ZRef[EA, EB, Chunk[A], Chunk[A]]) {
+  implicit class AtZRefSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](private val self: ZRef[RA, RB, EA, EB, Chunk[A], Chunk[A]]) {
 
     /**
      * Accesses the specified index of a chunk.
      */
-    def at(n: Int): ZRef[EA, EB, A, A] =
+    def at(n: Int): ZRef[RA with RB, RB, EA, EB, A, A] =
       self.accessField(Optic.at(n))
   }
 
@@ -88,12 +88,12 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the `::` case of a `List` in a
    * `ZRef`.
    */
-  implicit class ConsZRefSyntax[EA, EB >: OpticFailure, A](private val self: ZRef[EA, EB, List[A], List[A]]) {
+  implicit class ConsZRefSyntax[RA, RB, EA, EB >: OpticFailure, A](private val self: ZRef[RA, RB, EA, EB, List[A], List[A]]) {
 
     /**
      * Accesses the `::` case of a `List`.
      */
-    def cons: ZRef[EA, EB, (A, List[A]), (A, List[A])] =
+    def cons: ZRef[RA, RB, EA, EB, (A, List[A]), (A, List[A])] =
       self.accessCase(Optic.cons)
   }
 
@@ -101,12 +101,12 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing a filtered subset of a chunk in a
    * `ZRef`.
    */
-  implicit class FilterZRefSyntax[EA >: EB, EB >: OpticFailure, A](private val self: ZRef[EA, EB, Chunk[A], Chunk[A]]) {
+  implicit class FilterZRefSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](private val self: ZRef[RA, RB, EA, EB, Chunk[A], Chunk[A]]) {
 
     /**
      * Accesses a filtered subset of a chunk.
      */
-    def filter(f: A => Boolean): ZRef[EA, EB, Chunk[A], Chunk[A]] =
+    def filter(f: A => Boolean): ZRef[RA with RB, RB, EA, EB, Chunk[A], Chunk[A]] =
       self.accessElements(Optic.filter(f))
   }
 
@@ -114,24 +114,24 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the first element of a tuple in a
    * `ZRef`.
    */
-  implicit class FirstZRefSyntax[EA >: EB, EB, A, B, C](private val self: ZRef[EA, EB, (C, B), (A, B)]) {
+  implicit class FirstZRefSyntax[RA, RB, EA >: EB, EB, A, B, C](private val self: ZRef[RA, RB, EA, EB, (C, B), (A, B)]) {
 
     /**
      * Accesses the first element of a tuple.
      */
-    def first: ZRef[EA, EB, C, A] =
+    def first: ZRef[RA with RB, RB, EA, EB, C, A] =
       self.accessField(Optic.first)
   }
 
   /**
    * Provides implicit syntax for accessing the head of a list in a `ZRef`.
    */
-  implicit class HeadZRefSyntax[EA >: EB, EB >: OpticFailure, A](private val self: ZRef[EA, EB, List[A], List[A]]) {
+  implicit class HeadZRefSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](private val self: ZRef[RA, RB, EA, EB, List[A], List[A]]) {
 
     /**
      * Accesses the head of a list.
      */
-    def head: ZRef[EA, EB, A, A] =
+    def head: ZRef[RA with RB, RB, EA, EB, A, A] =
       self.accessField(Optic.head)
   }
 
@@ -139,14 +139,14 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the value at the specified key in a
    * map in a `ZRef`.
    */
-  implicit class KeyZRefSyntax[EA >: EB, EB >: OpticFailure, K, V](
-    private val self: ZRef[EA, EB, Map[K, V], Map[K, V]]
+  implicit class KeyZRefSyntax[RA, RB, EA >: EB, EB >: OpticFailure, K, V](
+    private val self: ZRef[RA, RB, EA, EB, Map[K, V], Map[K, V]]
   ) {
 
     /**
      * Accesses the value at the specified key in a map.
      */
-    def key(k: K): ZRef[EA, EB, V, V] =
+    def key(k: K): ZRef[RA with RB, RB, EA, EB, V, V] =
       self.accessField(Optic.key(k))
   }
 
@@ -154,14 +154,14 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the `Left` case of an `Either` in a
    * `ZRef`.
    */
-  implicit class LeftZRefSyntax[EA, EB >: OpticFailure, A, B, C](
-    private val self: ZRef[EA, EB, Either[C, B], Either[A, B]]
+  implicit class LeftZRefSyntax[RA, RB, EA, EB >: OpticFailure, A, B, C](
+    private val self: ZRef[RA, RB, EA, EB, Either[C, B], Either[A, B]]
   ) {
 
     /**
      * Accesses the `Left` case of an `Either`.
      */
-    def left: ZRef[EA, EB, C, A] =
+    def left: ZRef[RA, RB, EA, EB, C, A] =
       self.accessCase(Optic.left)
   }
 
@@ -169,12 +169,12 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the `None` case of an `Option` in a
    * `ZRef`.
    */
-  implicit class NoneZRefSyntax[EA, EB >: OpticFailure, A](private val self: ZRef[EA, EB, Option[A], Option[A]]) {
+  implicit class NoneZRefSyntax[RA, RB, EA, EB >: OpticFailure, A](private val self: ZRef[RA, RB, EA, EB, Option[A], Option[A]]) {
 
     /**
      * Accesses the `None` case of an `Option`.
      */
-    def none: ZRef[EA, EB, Unit, Unit] =
+    def none: ZRef[RA, RB, EA, EB, Unit, Unit] =
       self.accessCase(Optic.none)
   }
 
@@ -182,14 +182,14 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the `Right` case of an `Either` in
    * a `ZRef`.
    */
-  implicit class RightZRefSyntax[EA, EB >: OpticFailure, A, B, C](
-    private val self: ZRef[EA, EB, Either[A, C], Either[A, B]]
+  implicit class RightZRefSyntax[RA, RB, EA, EB >: OpticFailure, A, B, C](
+    private val self: ZRef[RA, RB, EA, EB, Either[A, C], Either[A, B]]
   ) {
 
     /**
      * Accesses the `Right` case of an `Either`.
      */
-    def right: ZRef[EA, EB, C, B] =
+    def right: ZRef[RA, RB, EA, EB, C, B] =
       self.accessCase(Optic.right)
   }
 
@@ -197,24 +197,24 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the second element of a tuple in a
    * `ZRef`.
    */
-  implicit class SecondZRefSyntax[EA >: EB, EB, A, B, C](private val self: ZRef[EA, EB, (A, C), (A, B)]) {
+  implicit class SecondZRefSyntax[RA, RB, EA >: EB, EB, A, B, C](private val self: ZRef[RA, RB, EA, EB, (A, C), (A, B)]) {
 
     /**
      * Accesses the second element of a tuple.
      */
-    def second: ZRef[EA, EB, C, B] =
+    def second: ZRef[RA with RB, RB, EA, EB, C, B] =
       self.accessField(Optic.second)
   }
 
   /**
    * Provides implicit syntax for accessing a slice of a chunk in a `ZRef`.
    */
-  implicit class SliceZRefSyntax[EA >: EB, EB >: OpticFailure, A](private val self: ZRef[EA, EB, Chunk[A], Chunk[A]]) {
+  implicit class SliceZRefSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](private val self: ZRef[RA, RB, EA, EB, Chunk[A], Chunk[A]]) {
 
     /**
      * Accesses a slice of a chunk.
      */
-    def slice(from: Int, until: Int): ZRef[EA, EB, Chunk[A], Chunk[A]] =
+    def slice(from: Int, until: Int): ZRef[RA with RB, RB, EA, EB, Chunk[A], Chunk[A]] =
       self.accessElements(Optic.slice(from, until))
   }
 
@@ -222,24 +222,24 @@ package object optics extends Optics {
    * Provides implicit syntax for accessing the `Some` case of an `Option` in a
    * `ZRef`.
    */
-  implicit class SomeZRefSyntax[EA, EB >: OpticFailure, A, B](private val self: ZRef[EA, EB, Option[B], Option[A]]) {
+  implicit class SomeZRefSyntax[RA, RB, EA, EB >: OpticFailure, A, B](private val self: ZRef[RA, RB, EA, EB, Option[B], Option[A]]) {
 
     /**
      * Accesses the `Some` case of an `Option`.
      */
-    def some: ZRef[EA, EB, B, A] =
+    def some: ZRef[RA, RB, EA, EB, B, A] =
       self.accessCase(Optic.some)
   }
 
   /**
    * Provides implicit syntax for accessing the tail of a list in a `ZRef`.
    */
-  implicit class TailZRefSyntax[EA >: EB, EB >: OpticFailure, A](private val self: ZRef[EA, EB, List[A], List[A]]) {
+  implicit class TailZRefSyntax[RA, RB, EA >: EB, EB >: OpticFailure, A](private val self: ZRef[RA, RB, EA, EB, List[A], List[A]]) {
 
-    /**
+    /**1
      * Accesses the tail of a list.
      */
-    def tail: ZRef[EA, EB, List[A], List[A]] =
+    def tail: ZRef[RA with RB, RB, EA, EB, List[A], List[A]] =
       self.accessField(Optic.tail)
   }
 }

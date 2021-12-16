@@ -19,7 +19,7 @@ package object toptics
     stm.flatMap(f)
 
   protected def foldM[E, E2, A, B](stm: STM[E, A])(f: E => STM[E2, B], g: A => STM[E2, B]): STM[E2, B] =
-    stm.foldM(f, g)
+    stm.foldSTM(f, g)
 
   protected def map[E, A, B](opticResult: OpticResult[E, A])(f: A => B): OpticResult[E, B] =
     opticResult.map(f)
@@ -52,7 +52,7 @@ package object toptics
     def accessElements[EC >: EA, ED >: EB, C, D](
       optic: Optic[B, B, Chunk[C], ED, EC, Chunk[D], A]
     ): ZTRef[EC, ED, Chunk[C], Chunk[D]] =
-      self.foldAllM(
+      self.foldAllSTM(
         identity,
         identity,
         identity,
@@ -64,7 +64,7 @@ package object toptics
      * Accesses a field of a product type.
      */
     def accessField[EC >: EA, ED >: EB, C, D](optic: Optic[B, B, C, ED, EC, D, A]): ZTRef[EC, ED, C, D] =
-      self.foldAllM(
+      self.foldAllSTM(
         identity,
         identity,
         identity,
@@ -82,7 +82,7 @@ package object toptics
      * Accesses a term of a sum type.
      */
     final def accessCase[EC >: EA, ED >: EB, C, D](optic: Optic[B, Any, C, ED, EC, D, A]): ZTRef[EC, ED, C, D] =
-      self.foldM(
+      self.foldSTM(
         identity,
         identity,
         c => optic.setOptic(c)(()).mapError(_._1),
