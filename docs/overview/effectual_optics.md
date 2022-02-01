@@ -16,7 +16,7 @@ trait Optic[-GetWhole, -SetWholeBefore, -SetPiece, +GetError, +SetError, +GetPie
 }
 ```
 
-To work with these optics, import `zio.optics.opticsm._` for optics where the result type is a `ZIO` value or `zio.optics.topics._` for optics where the result type is an `STM` value. This will automatically bring the appropriate version of the `Optic` data type as well as its constructors and syntax into scope.
+To work with these optics, import `zio.optics.opticsm._` for optics where the result type is a `ZIO` value or `zio.optics.toptics._` for optics where the result type is an `STM` value. This will automatically bring the appropriate version of the `Optic` data type as well as its constructors and syntax into scope.
 
 For example, here is how we could define an optic to work with a nested value inside a `TMap`:
 
