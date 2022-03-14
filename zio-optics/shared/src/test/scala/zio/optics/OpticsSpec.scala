@@ -129,7 +129,7 @@ object OpticsSpec extends DefaultRunnableSpec {
         val zipped = l1 <*> l2 <*> l3
         val t1     = zipped.set((10, "xx", -2.0))(t0)
 
-        assertTrue(t1.toOption.get == ((10, "xx", -2.0, "y")))
+        assertTrue(t1 == Right((10, "xx", -2.0, "y")))
       }
     )
   )
