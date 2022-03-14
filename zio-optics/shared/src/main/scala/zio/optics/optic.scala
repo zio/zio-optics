@@ -218,6 +218,20 @@ trait OpticModule {
       )
 
     /**
+     * An optic that accesses the value at the specified key in a map, or returns
+     * a default value if the key is missing.
+     */
+    def keyOrDefault[K, V](k: K, default: => V): Lens[Map[K, V], V] =
+      Lens(
+        map =>
+          map.get(k) match {
+            case Some(v) => succeed(v)
+            case None    => succeed(default)
+          },
+        v => map => succeed(map + (k -> v))
+      )
+
+    /**
      * An optic that accesses the `Left` case of an `Either`.
      */
     def left[A, B, C]: ZPrism[Either[A, B], Either[C, B], A, C] =
@@ -655,6 +669,16 @@ trait OpticModule {
        */
       final def key(k: Key): Optic[Any, Any, Value, GetError, SetError, Value, Whole] =
         self >>> Optic.key(k)
+
+      /**
+       * Accesses the value at the specified key in a map pr a provided default
+       * if the key is missing
+       */
+      final def keyOrDefault(
+        k: Key,
+        default: => Value
+      ): Optic[Nothing, Nothing, Value, GetError, SetError, Value, Whole] =
+        self >>> Optic.keyOrDefault(k, default)
     }
 
     /**

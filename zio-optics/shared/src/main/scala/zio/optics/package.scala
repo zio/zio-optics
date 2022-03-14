@@ -158,6 +158,13 @@ package object optics extends Optics {
      */
     def key(k: K): ZRef[RA with RB, RB, EA, EB, V, V] =
       self.accessField(Optic.key(k))
+
+    /**
+     * Accesses the value at the specified key in a map or a provided
+     * default if the key is missing
+     */
+    def keyOrDefault(k: K, default: => V): ZRef[RA with RB, RB, EA, EB, V, V] =
+      self.accessField(Optic.keyOrDefault(k, default))
   }
 
   /**

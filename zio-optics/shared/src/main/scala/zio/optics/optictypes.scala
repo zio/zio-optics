@@ -248,6 +248,13 @@ trait OpticTypesModule {
       Optic.key(k)
 
     /**
+     * An optic that accesses the value at the specified key in a map, or returns
+     * a default value if the key is missing.
+     */
+    def keyOrDefault[K, V](k: K, default: => V): Lens[Map[K, V], V] =
+      Optic.keyOrDefault(k, default)
+
+    /**
      * An optic that accesses the tail of a list.
      */
     def tail[A]: Optional[List[A], List[A]] =
