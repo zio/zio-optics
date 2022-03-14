@@ -1,6 +1,6 @@
 package zio.optics
 
-import zio.{Chunk, ChunkBuilder}
+import zio.{Chunk, ChunkBuilder, Zippable}
 
 trait OpticResultModule { self =>
 
@@ -80,8 +80,10 @@ trait OpticResultModule { self =>
   /**
    * Constructs an optic result that combines the left and right optic results.
    */
-  protected final def zip[E, A, B](left: => OpticResult[E, A], right: => OpticResult[E, B]): OpticResult[E, (A, B)] =
-    zipWith(left, right)((_, _))
+  protected final def zip[E, A, B, Zipped](left: => OpticResult[E, A], right: => OpticResult[E, B])(implicit
+    zippable: Zippable.Out[A, B, Zipped]
+  ): OpticResult[E, Zipped] =
+    zipWith(left, right)(zippable.zip)
 
   /**
    * Constructs an optic result that combines the left and right optic results,
@@ -136,7 +138,9 @@ trait OpticResultModule { self =>
     /**
      * Combines this optic result with that optic result.
      */
-    def zip[E1 >: E, B](that: => OpticResult[E1, B]): OpticResult[E1, (A, B)] =
+    def zip[E1 >: E, B, Zipped](that: => OpticResult[E1, B])(implicit
+      zippable: Zippable.Out[A, B, Zipped]
+    ): OpticResult[E1, Zipped] =
       self.zip(opticResult, that)
 
     /**

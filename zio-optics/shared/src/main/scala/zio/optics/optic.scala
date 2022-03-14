@@ -29,30 +29,6 @@ trait OpticModule {
       )
 
     /**
-     * A symbolic alias for `zip`.
-     */
-    final def <*>[
-      GetWhole1 <: GetWhole,
-      SetWholeBefore1 >: SetWholeAfter <: SetWholeBefore,
-      SetPiece2,
-      GetError1 >: GetError,
-      SetError1 >: SetError,
-      GetPiece2,
-      SetWholeAfter1 >: SetWholeAfter
-    ](
-      that: Optic[GetWhole1, SetWholeBefore1, SetPiece2, GetError1, SetError1, GetPiece2, SetWholeAfter1]
-    ): Optic[
-      GetWhole1,
-      SetWholeBefore1,
-      (SetPiece, SetPiece2),
-      GetError1,
-      SetError1,
-      (GetPiece, GetPiece2),
-      SetWholeAfter1
-    ] =
-      self.zip(that)
-
-    /**
      * A symbolic alias for `orElse`.
      */
     final def <>[
@@ -93,35 +69,6 @@ trait OpticModule {
       Optic(
         whole => self.getOptic(whole).orElse(that.getOptic(whole)),
         piece => whole => self.setOptic(piece)(whole).orElse(that.setOptic(piece)(whole))
-      )
-
-    /**
-     * Constructs a new optic that gets and sets with both this optic and that
-     * optic. This optic and that optic must get and set different pieces of
-     * the whole.
-     */
-    final def zip[
-      GetWhole1 <: GetWhole,
-      SetWholeBefore1 >: SetWholeAfter <: SetWholeBefore,
-      SetPiece2,
-      GetError1 >: GetError,
-      SetError1 >: SetError,
-      GetPiece2,
-      SetWholeAfter1 >: SetWholeAfter
-    ](
-      that: Optic[GetWhole1, SetWholeBefore1, SetPiece2, GetError1, SetError1, GetPiece2, SetWholeAfter1]
-    ): Optic[
-      GetWhole1,
-      SetWholeBefore1,
-      (SetPiece, SetPiece2),
-      GetError1,
-      SetError1,
-      (GetPiece, GetPiece2),
-      SetWholeAfter1
-    ] =
-      Optic(
-        whole => self.getOptic(whole).zip(that.getOptic(whole)),
-        piece => whole => self.setOptic(piece._1)(whole).flatMap(whole => (that.setOptic(piece._2)(whole)))
       )
   }
 
@@ -407,6 +354,79 @@ trait OpticModule {
         ]
       ): Optic[GetWhole, SetWholeBefore2, SetPiece1, GetError1, SetError1, GetPiece1, SetWholeAfter] =
         ev.compose(self, that)
+    }
+
+    implicit class ZipSyntax[GetWhole, SetWholeBefore, SetPiece, GetError, SetError, GetPiece, SetWholeAfter](
+      private val self: Optic[GetWhole, SetWholeBefore, SetPiece, GetError, SetError, GetPiece, SetWholeAfter]
+    ) {
+
+      /**
+       * Constructs a new optic that gets and sets with both this optic and that
+       * optic. This optic and that optic must get and set different pieces of
+       * the whole.
+       */
+      final def zip[
+        GetWhole1 <: GetWhole,
+        SetWholeBefore1 >: SetWholeAfter <: SetWholeBefore,
+        SetPiece2,
+        GetError1 >: GetError,
+        SetError1 >: SetError,
+        GetPiece2,
+        SetWholeAfter1 >: SetWholeAfter,
+        ZippedSetPiece,
+        ZippedGetPiece
+      ](
+        that: Optic[GetWhole1, SetWholeBefore1, SetPiece2, GetError1, SetError1, GetPiece2, SetWholeAfter1]
+      )(implicit
+        unzippable: Unzippable.In[SetPiece, SetPiece2, ZippedSetPiece],
+        zippable: Zippable.Out[GetPiece, GetPiece2, ZippedGetPiece]
+      ): Optic[
+        GetWhole1,
+        SetWholeBefore1,
+        ZippedSetPiece,
+        GetError1,
+        SetError1,
+        ZippedGetPiece,
+        SetWholeAfter1
+      ] =
+        Optic(
+          whole => self.getOptic(whole).zip(that.getOptic(whole)),
+          piece =>
+            whole =>
+              self
+                .setOptic(unzippable.unzip(piece)._1)(whole)
+                .flatMap(whole => (that.setOptic(unzippable.unzip(piece)._2)(whole)))
+        )
+
+      /**
+       * A symbolic alias for `zip`.
+       */
+      final def <*>[
+        GetWhole1 <: GetWhole,
+        SetWholeBefore1 >: SetWholeAfter <: SetWholeBefore,
+        SetPiece2,
+        GetError1 >: GetError,
+        SetError1 >: SetError,
+        GetPiece2,
+        SetWholeAfter1 >: SetWholeAfter,
+        ZippedSetPiece,
+        ZippedGetPiece
+      ](
+        that: Optic[GetWhole1, SetWholeBefore1, SetPiece2, GetError1, SetError1, GetPiece2, SetWholeAfter1]
+      )(implicit
+        unzippable: Unzippable.In[SetPiece, SetPiece2, ZippedSetPiece],
+        zippable: Zippable.Out[GetPiece, GetPiece2, ZippedGetPiece]
+      ): Optic[
+        GetWhole1,
+        SetWholeBefore1,
+        ZippedSetPiece,
+        GetError1,
+        SetError1,
+        ZippedGetPiece,
+        SetWholeAfter1
+      ] =
+        self.zip(that)
+
     }
 
     /**
