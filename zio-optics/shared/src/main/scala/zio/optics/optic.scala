@@ -425,8 +425,17 @@ trait OpticModule {
         ZippedGetPiece,
         SetWholeAfter1
       ] =
-        self.zip(that)
-
+        self.zip[
+          GetWhole1,
+          SetWholeBefore1,
+          SetPiece2,
+          GetError1,
+          SetError1,
+          GetPiece2,
+          SetWholeAfter1,
+          ZippedSetPiece,
+          ZippedGetPiece
+        ](that)
     }
 
     /**
