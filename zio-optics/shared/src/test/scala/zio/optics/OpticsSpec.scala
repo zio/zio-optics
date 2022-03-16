@@ -119,6 +119,17 @@ object OpticsSpec extends DefaultRunnableSpec {
           _     <- ref.slice(3, 6).update(negate)
           value <- ref.get
         } yield assert(value)(equalTo(Chunk(0, 1, 2, -3, -4, -5, 6, 7, 8, 9)))
+      },
+      test("zipping") {
+        val t0 = (1, "x", 2.0, "y")
+        val l1 = Lens[(Int, String, Double, String), Int](s => Right(s._1), c => s => Right(s.copy(_1 = c)))
+        val l2 = Lens[(Int, String, Double, String), String](s => Right(s._2), c => s => Right(s.copy(_2 = c)))
+        val l3 = Lens[(Int, String, Double, String), Double](s => Right(s._3), c => s => Right(s.copy(_3 = c)))
+
+        val zipped = l1 <*> l2 <*> l3
+        val t1     = zipped.set((10, "xx", -2.0))(t0)
+
+        assertTrue(t1 == Right((10, "xx", -2.0, "y")))
       }
     )
   )
