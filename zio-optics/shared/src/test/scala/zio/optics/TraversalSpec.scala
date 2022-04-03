@@ -4,9 +4,9 @@ import zio._
 import zio.test.Assertion._
 import zio.test._
 
-object TraversalSpec extends DefaultRunnableSpec with EitherCompat {
+object TraversalSpec extends ZIOSpecDefault with EitherCompat {
 
-  def spec: ZSpec[Environment, Failure] = suite("TraversalSpec")(
+  def spec: ZSpec[Environment, Any] = suite("TraversalSpec")(
     suite("operators")(
       test("update") {
         check(Gen.chunkOf(Gen.either(Gen.int, Gen.int)), Gen.function(Gen.int)) { (chunk, f) =>

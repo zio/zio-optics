@@ -28,17 +28,7 @@ Person.age.set(43)(person)
 Person.age.update(person)(_ + 1)
 ```
 
-In addition to this, ZIO Optics provides special support for accessing values inside of ZIO data types such as `Ref`. Instead of having to create an optic and then use it to modify a data structure we can "zoom in" on the value inside of the `ZRef` directly using "dot" syntax.
-
-```scala mdoc:compile-only
-val ref: Ref[Map[String, Either[String, Chunk[Int]]]] =
-  ???
-
-val io: IO[OpticFailure, Unit] =
-  ref.key("key").right.at(0).update(_ + 1)
-```
-
-You can use this dot syntax with ordinary values using the `optic` operator.
+In addition to this, ZIO Optics provides support for accessing values directly using "dot" syntax with the `optic` operator.
 
 ```scala mdoc:compile-only
 val map: Map[String, Either[String, Chunk[Int]]] =

@@ -5,9 +5,9 @@ import zio.stm._
 import zio.test.Assertion._
 import zio.test._
 
-object TOpticsSpec extends DefaultRunnableSpec {
+object TOpticsSpec extends ZIOSpecDefault {
 
-  def spec: ZSpec[Environment, Failure] =
+  def spec: ZSpec[Environment, Any] =
     suite("TOpticsSpec")(
       test("TMap syntax") {
         val transaction = for {

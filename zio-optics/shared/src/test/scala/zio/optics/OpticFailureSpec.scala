@@ -3,9 +3,9 @@ package zio.optics
 import zio.test.Assertion._
 import zio.test._
 
-object OpticFailureSpec extends DefaultRunnableSpec {
+object OpticFailureSpec extends ZIOSpecDefault {
 
-  def spec: ZSpec[Environment, Failure] = suite("OpticFailureSpec")(
+  def spec: ZSpec[Environment, Any] = suite("OpticFailureSpec")(
     suite("error reporting")(
       test("should report error with prism") {
         val whole                               = Right(42)
