@@ -7,7 +7,7 @@ import zio.test._
 
 object TOpticsSpec extends ZIOSpecDefault {
 
-  def spec: Spec[Any, TestFailure[zio.optics.toptics.OpticFailure], TestSuccess] =
+  def spec: ZSpec[Environment, Any] =
     suite("TOpticsSpec")(
       test("TMap syntax") {
         val transaction = for {
