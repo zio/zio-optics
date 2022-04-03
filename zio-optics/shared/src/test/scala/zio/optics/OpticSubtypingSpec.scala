@@ -1,10 +1,11 @@
 package zio.optics
 
 import zio.test._
+import zio.{Scope, ZIOAppArgs}
 
-object OpticSubtypingSpec extends DefaultRunnableSpec {
+object OpticSubtypingSpec extends ZIOSpecDefault {
 
-  def spec: ZSpec[Environment, Failure] = suite("SubtypingSpec")(
+  def spec: ZSpec[Environment with TestEnvironment with ZIOAppArgs with Scope, Any] = suite("SubtypingSpec")(
     test("an isomorphism is a lens")(isSubtypeOf[ZIso[S, T, A, B], ZLens[S, T, A, B]]),
     test("an isomorphism is a prism")(isSubtypeOf[ZIso[S, T, A, B], ZPrism[S, T, A, B]]),
     test("a lens is an optional")(isSubtypeOf[ZLens[S, T, A, B], ZOptional[S, T, A, B]]),

@@ -4,9 +4,9 @@ import zio._
 import zio.test.Assertion._
 import zio.test._
 
-object PrismSpec extends DefaultRunnableSpec {
+object PrismSpec extends ZIOSpecDefault {
 
-  def spec: ZSpec[Environment, Failure] = suite("PrismSpec")(
+  def spec: ZSpec[Environment with TestEnvironment with ZIOAppArgs with Scope, Any] = suite("PrismSpec")(
     suite("constructors")(
       test("cons")(prismLaws(Gen.listOf(Gen.int), Gen.int.zip(Gen.listOf(Gen.int)))(Prism.cons)),
       test("first")(prismLaws(Gen.either(Gen.int, Gen.int), Gen.int)(Prism.left)),

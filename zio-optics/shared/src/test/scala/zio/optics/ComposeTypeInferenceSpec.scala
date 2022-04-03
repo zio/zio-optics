@@ -1,10 +1,11 @@
 package zio.optics
 
 import zio.test._
+import zio.{Scope, ZIOAppArgs}
 
-object ComposeTypeInferenceSpec extends DefaultRunnableSpec {
+object ComposeTypeInferenceSpec extends ZIOSpecDefault {
 
-  def spec: ZSpec[Environment, Failure] = suite("ComposeTypeInferenceSpec")(
+  def spec: ZSpec[Environment with TestEnvironment with ZIOAppArgs with Scope, Any] = suite("ComposeTypeInferenceSpec")(
     test("the composition of an iso and a prism is a prism") {
       lazy val a: ZIso[S, T, A, B]   = ???
       lazy val b: ZPrism[A, B, C, D] = ???

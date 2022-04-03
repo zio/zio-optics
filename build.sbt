@@ -42,7 +42,7 @@ addCommandAlias(
   ";zioOpticsNative/test:compile"
 )
 
-val zioVersion = "2.0.0-RC2"
+val zioVersion = "2.0.0-RC4"
 
 lazy val root = project
   .in(file("."))
