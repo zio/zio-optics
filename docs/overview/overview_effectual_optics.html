@@ -69,7 +69,7 @@
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">setOptic</span></span>(piece: <span class="hljs-type">SetPiece</span>)(whole: <span class="hljs-type">SetWholeBefore</span>): <span class="hljs-type">IO</span>[<span class="hljs-type">SetError</span>, <span class="hljs-type">SetWholeAfter</span>]
 }
 </code></pre>
-<p>To work with these optics, import <code>zio.optics.opticsm._</code> for optics where the result type is a <code>ZIO</code> value or <code>zio.optics.toptics._</code> for optics where the result type is an <code>STM</code> value. This will automatically bring the appropriate version of the <code>Optic</code> data type as well as its constructors and syntax into scope.</p>
+<p>To work with these optics, import <code>zio.optics.opticsm._</code> for optics where the result type is a <code>ZIO</code> value or <code>zio.optics.topics._</code> for optics where the result type is an <code>STM</code> value. This will automatically bring the appropriate version of the <code>Optic</code> data type as well as its constructors and syntax into scope.</p>
 <p>For example, here is how we could define an optic to work with a nested value inside a <code>TMap</code>:</p>
 <pre><code class="hljs css language-scala"><span class="hljs-keyword">import</span> zio.stm._
 <span class="hljs-keyword">import</span> zio.optics.toptics._
