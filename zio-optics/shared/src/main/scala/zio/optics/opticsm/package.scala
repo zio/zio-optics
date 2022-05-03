@@ -12,7 +12,7 @@ package object opticsm
   type OpticResult[+E, +A] = IO[E, A]
 
   protected def fail[E](e: E): IO[E, Nothing] =
-    IO.fail(e)
+    ZIO.fail(e)
 
   protected def flatMap[E, A, B](io: IO[E, A])(f: A => IO[E, B]): IO[E, B] =
     io.flatMap(f)
@@ -24,5 +24,5 @@ package object opticsm
     opticResult.map(f)
 
   protected def succeed[A](a: A): IO[Nothing, A] =
-    IO.succeed(a)
+    ZIO.succeed(a)
 }

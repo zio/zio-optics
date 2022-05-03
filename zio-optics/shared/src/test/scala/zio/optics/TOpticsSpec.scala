@@ -7,7 +7,7 @@ import zio.test._
 
 object TOpticsSpec extends ZIOSpecDefault {
 
-  def spec: ZSpec[Environment, Any] =
+  def spec: Spec[Environment, Any] =
     suite("TOpticsSpec")(
       test("TMap syntax") {
         val transaction = for {
@@ -16,7 +16,7 @@ object TOpticsSpec extends ZIOSpecDefault {
           _        <- map.key("foo").right.update(_ + 1)
           snapshot <- map.toMap
         } yield snapshot
-        assertM(transaction.commit)(equalTo(Map("foo" -> Right(43))))
+        assertZIO(transaction.commit)(equalTo(Map("foo" -> Right(43))))
       }
     )
 }
