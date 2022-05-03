@@ -6,7 +6,7 @@ import zio.test._
 
 object TraversalSpec extends ZIOSpecDefault with EitherCompat {
 
-  def spec: ZSpec[Environment, Any] = suite("TraversalSpec")(
+  def spec: Spec[Environment, Any] = suite("TraversalSpec")(
     suite("operators")(
       test("update") {
         check(Gen.chunkOf(Gen.either(Gen.int, Gen.int)), Gen.function(Gen.int)) { (chunk, f) =>

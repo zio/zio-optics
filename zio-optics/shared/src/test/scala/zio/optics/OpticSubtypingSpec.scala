@@ -4,7 +4,7 @@ import zio.test._
 
 object OpticSubtypingSpec extends ZIOSpecDefault {
 
-  def spec: ZSpec[Environment, Any] = suite("SubtypingSpec")(
+  def spec: Spec[Environment, Any] = suite("SubtypingSpec")(
     test("an isomorphism is a lens")(isSubtypeOf[ZIso[S, T, A, B], ZLens[S, T, A, B]]),
     test("an isomorphism is a prism")(isSubtypeOf[ZIso[S, T, A, B], ZPrism[S, T, A, B]]),
     test("a lens is an optional")(isSubtypeOf[ZLens[S, T, A, B], ZOptional[S, T, A, B]]),
