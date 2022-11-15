@@ -1,6 +1,7 @@
 ---
-id: overview_index
-title: "Summary"
+id: index
+title: "Introduction to ZIO Optics"
+sidebar_label: "ZIO Optics"
 ---
 
 ZIO Optics makes it easy to modify parts of larger data structures.
