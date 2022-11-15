@@ -54,5 +54,5 @@ ZIO Optics makes it easy to compose more complex optics from simpler ones, to de
 Include ZIO Optics in your project by adding the following to your `build.sbt` file:
 
 ```scala
-libraryDependencies += "dev.zio" %% "zio-optics" % zioOpticsVersion
+libraryDependencies += "dev.zio" %% "zio-optics" % "@VERSION@"
 ```
