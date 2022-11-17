@@ -1,5 +1,5 @@
 ---
-id: overview_effectual_optics
+id: effectual-optics
 title: "Effectual Optics"
 ---
 
