@@ -92,7 +92,15 @@ lazy val docs = project
     publish / skip := true,
     moduleName := "zio-optics-docs",
     scalacOptions -= "-Yno-imports",
-    scalacOptions -= "-Xfatal-warnings"
+    scalacOptions -= "-Xfatal-warnings",
+    projectName := "ZIO Optics",
+    badgeInfo := Some(
+      BadgeInfo(
+        artifact = "zio-optics_2.12",
+        projectStage = ProjectStage.Development
+      )
+    ),
+    docsPublishBranch := "master"
   )
   .dependsOn(zioOpticsJVM)
   .enablePlugins(WebsitePlugin)
