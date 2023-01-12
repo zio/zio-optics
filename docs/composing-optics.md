@@ -1,5 +1,5 @@
 ---
-id: overview_composing_optics
+id: composing-optics
 title: "Composing Optics"
 ---
 

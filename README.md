@@ -19,10 +19,7 @@ ZIO Optics features:
 For more information check out the microsite below.
 
 # Documentation
-[ZIO Optics Microsite](https://zio.github.io/zio-optics/)
-
-# Contributing
-[Documentation for contributors](https://zio.github.io/zio-optics/docs/about/about_contributing)
+[ZIO Optics Microsite](https://zio.dev/zio-optics/)
 
 ## Code of Conduct
 
