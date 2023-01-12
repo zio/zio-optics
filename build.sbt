@@ -87,7 +87,6 @@ lazy val zioOpticsNative = zioOptics.native
 
 lazy val docs = project
   .in(file("zio-optics-docs"))
-  .settings(stdSettings("zio-optics"))
   .settings(
     moduleName := "zio-optics-docs",
     scalacOptions -= "-Yno-imports",
