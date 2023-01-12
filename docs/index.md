@@ -66,7 +66,9 @@ We also have to explicitly handle the possibility that the value is not in the m
 
 Here is what this would look like with ZIO Optics.
 
-```scala mdoc:nest
+[//]: # (TODO: Make this snippet type-safe using mdoc modifer)
+
+```scala
 import zio.optics._
 
 def incrementVotes(topic: String): Task[Unit] =
