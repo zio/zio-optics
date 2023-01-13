@@ -1,5 +1,5 @@
 ---
-id: overview_constructing_optics
+id: constructing-optics
 title: "Constructing Optics"
 ---
 
