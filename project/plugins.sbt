@@ -17,4 +17,4 @@ addSbtPlugin("pl.project13.scala"                % "sbt-jcstress"               
 addSbtPlugin("pl.project13.scala"                % "sbt-jmh"                       % "0.4.3")
 addSbtPlugin("dev.zio"                           % "zio-sbt-website"               % "0.3.4")
 
-libraryDependencies += "org.snakeyaml" % "snakeyaml-engine" % "2.3"
+libraryDependencies += "org.snakeyaml" % "snakeyaml-engine" % "2.6"
