@@ -1,5 +1,5 @@
 ---
-id: overview_understanding_optics
+id: understanding-optics
 title: "Understanding Optics"
 ---
 

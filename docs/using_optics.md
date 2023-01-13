@@ -1,5 +1,5 @@
 ---
-id: overview_using_optics
+id: using-optics
 title: "Using Optics"
 ---
 
