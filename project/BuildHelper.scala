@@ -23,7 +23,7 @@ object BuildHelper {
   val Scala211: String   = versions("2.11")
   val Scala212: String   = versions("2.12")
   val Scala213: String   = versions("2.13")
-  val ScalaDotty: String = versions("3.1")
+  val ScalaDotty: String = versions("3.2")
 
   val SilencerVersion = "1.7.6"
 
@@ -287,10 +287,7 @@ object BuildHelper {
     }
   )
 
-  def jsSettings = Seq(
-    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time"      % "2.2.2",
-    libraryDependencies += "io.github.cquiroz" %%% "scala-java-time-tzdb" % "2.2.2"
-  )
+  def jsSettings = Seq()
 
   def nativeSettings = Seq(
     Test / test := (Test / compile).value,
