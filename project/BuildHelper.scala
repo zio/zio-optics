@@ -59,7 +59,7 @@ object BuildHelper {
       )
     else Nil
 
-  def buildInfoSettings(packageName: String) =
+  def oldBuildInfoSettings(packageName: String) =
     Seq(
       buildInfoKeys := Seq[BuildInfoKey](organization, moduleName, name, version, scalaVersion, sbtVersion, isSnapshot),
       buildInfoPackage := packageName
@@ -194,7 +194,7 @@ object BuildHelper {
     if result.exists
   } yield result
 
-  def crossPlatformSources(scalaVer: String, platform: String, conf: String, baseDir: File) = {
+  def oldCrossPlatformSources(scalaVer: String, platform: String, conf: String, baseDir: File) = {
     val versions = CrossVersion.partialVersion(scalaVer) match {
       case Some((2, 11)) =>
         List("2.11", "2.11+", "2.11-2.12", "2.x")
@@ -210,9 +210,9 @@ object BuildHelper {
     platformSpecificSources(platform, conf, baseDir)(versions: _*)
   }
 
-  lazy val crossProjectSettings = Seq(
+  lazy val oldCrossProjectSettings = Seq(
     Compile / unmanagedSourceDirectories ++= {
-      crossPlatformSources(
+      oldCrossPlatformSources(
         scalaVersion.value,
         crossProjectPlatform.value.identifier,
         "main",
@@ -220,7 +220,7 @@ object BuildHelper {
       )
     },
     Test / unmanagedSourceDirectories ++= {
-      crossPlatformSources(
+      oldCrossPlatformSources(
         scalaVersion.value,
         crossProjectPlatform.value.identifier,
         "test",
@@ -229,7 +229,7 @@ object BuildHelper {
     }
   )
 
-  def stdSettings(prjName: String) = Seq(
+  def oldStdSettings(prjName: String) = Seq(
     name := s"$prjName",
     crossScalaVersions := Seq(Scala211, Scala212, Scala213),
     ThisBuild / scalaVersion := Scala213,
@@ -295,15 +295,6 @@ object BuildHelper {
     Compile / doc / sources := Seq.empty
   )
 
-  val scalaReflectTestSettings: List[Setting[_]] = List(
-    libraryDependencies ++= {
-      if (scalaVersion.value == ScalaDotty)
-        Seq("org.scala-lang" % "scala-reflect" % Scala213           % Test)
-      else
-        Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value % Test)
-    }
-  )
-
   def welcomeMessage = onLoadMessage := {
     import scala.Console
 
@@ -333,6 +324,6 @@ object BuildHelper {
   }
 
   implicit class ModuleHelper(p: Project) {
-    def module: Project = p.in(file(p.id)).settings(stdSettings(p.id))
+    def module: Project = p.in(file(p.id)).settings(oldStdSettings(p.id))
   }
 }

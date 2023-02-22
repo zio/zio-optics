@@ -1,10 +1,11 @@
 import BuildHelper._
 
+enablePlugins(ZioSbtEcosystemPlugin, ZioSbtCiPlugin)
+
 inThisBuild(
   List(
-    organization := "dev.zio",
-    homepage := Some(url("https://zio.dev/zio-optics/")),
-    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    name := "ZIO Optics",
+    ciEnabledBranches := Seq("series/2.x"),
     developers := List(
       Developer(
         "jdegoes",
@@ -59,9 +60,9 @@ lazy val root = project
 
 lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("zio-optics"))
-  .settings(stdSettings("zio-optics"))
-  .settings(crossProjectSettings)
-  .settings(buildInfoSettings("zio.optics"))
+  .settings(oldStdSettings("zio-optics"))
+  .settings(oldCrossProjectSettings)
+  .settings(oldBuildInfoSettings("zio.optics"))
   .settings(
     libraryDependencies ++= Seq(
       "dev.zio" %% "zio"          % zioVersion,
@@ -91,10 +92,9 @@ lazy val docs = project
     moduleName := "zio-optics-docs",
     scalacOptions -= "-Yno-imports",
     scalacOptions -= "-Xfatal-warnings",
-    projectName := "ZIO Optics",
+    projectName := (ThisBuild / name).value,
     mainModuleName := (zioOpticsJVM / moduleName).value,
     projectStage := ProjectStage.Development,
-    docsPublishBranch := "series/2.x",
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(zioOpticsJVM)
   )
   .dependsOn(zioOpticsJVM)
