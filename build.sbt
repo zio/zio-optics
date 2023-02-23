@@ -2,6 +2,8 @@ import BuildHelper._
 
 enablePlugins(ZioSbtEcosystemPlugin, ZioSbtCiPlugin)
 
+crossScalaVersions := Seq.empty
+
 inThisBuild(
   List(
     name := "ZIO Optics",
@@ -19,10 +21,7 @@ inThisBuild(
         "adam.fraser@gmail.com",
         url("https://github.com/adamgfraser")
       )
-    ),
-    pgpPassphrase := sys.env.get("PGP_PASSWORD").map(_.toArray),
-    pgpPublicRing := file("/tmp/public.asc"),
-    pgpSecretRing := file("/tmp/secret.asc")
+    )
   )
 )
 
@@ -75,16 +74,20 @@ lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
 
 lazy val zioOpticsJS = zioOptics.js
   .settings(jsSettings)
-  .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
+  .settings(
+    crossScalaVersions -= scala211.value,
+    libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test
+  )
   .settings(scalaJSUseMainModuleInitializer := true)
 
 lazy val zioOpticsJVM = zioOptics.jvm
-  .settings(dottySettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
   .settings(scalaReflectTestSettings)
 
 lazy val zioOpticsNative = zioOptics.native
   .settings(nativeSettings)
+  .settings(crossScalaVersions -= scala211.value)
 
 lazy val docs = project
   .in(file("zio-optics-docs"))
@@ -92,6 +95,7 @@ lazy val docs = project
     moduleName := "zio-optics-docs",
     scalacOptions -= "-Yno-imports",
     scalacOptions -= "-Xfatal-warnings",
+    crossScalaVersions -= scala211.value,
     projectName := (ThisBuild / name).value,
     mainModuleName := (zioOpticsJVM / moduleName).value,
     projectStage := ProjectStage.Development,

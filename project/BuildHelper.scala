@@ -25,7 +25,7 @@ object BuildHelper {
   val Scala213: String   = versions("2.13")
   val ScalaDotty: String = versions("3.2")
 
-  val SilencerVersion = "1.7.6"
+  val SilencerVersion = "1.7.12"
 
   private val stdOptions = Seq(
     "-deprecation",
@@ -64,38 +64,6 @@ object BuildHelper {
       buildInfoKeys := Seq[BuildInfoKey](organization, moduleName, name, version, scalaVersion, sbtVersion, isSnapshot),
       buildInfoPackage := packageName
     )
-
-  val dottySettings = Seq(
-    crossScalaVersions += ScalaDotty,
-    scalacOptions ++= {
-      if (scalaVersion.value == ScalaDotty)
-        Seq("-noindent")
-      else
-        Seq()
-    },
-    scalacOptions --= {
-      if (scalaVersion.value == ScalaDotty)
-        Seq("-Xfatal-warnings")
-      else
-        Seq()
-    },
-    Compile / doc / sources := {
-      val old = (Compile / doc / sources).value
-      if (scalaVersion.value == ScalaDotty) {
-        Nil
-      } else {
-        old
-      }
-    },
-    Test / parallelExecution := {
-      val old = (Test / parallelExecution).value
-      if (scalaVersion.value == ScalaDotty) {
-        false
-      } else {
-        old
-      }
-    }
-  )
 
   val scalaReflectSettings = Seq(
     libraryDependencies ++= Seq("dev.zio" %%% "izumi-reflect" % "1.0.0-M10")
@@ -285,14 +253,6 @@ object BuildHelper {
           "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided"
         )
     }
-  )
-
-  def jsSettings = Seq()
-
-  def nativeSettings = Seq(
-    Test / test := (Test / compile).value,
-    doc / skip := true,
-    Compile / doc / sources := Seq.empty
   )
 
   def welcomeMessage = onLoadMessage := {
