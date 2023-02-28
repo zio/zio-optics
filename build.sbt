@@ -59,18 +59,8 @@ lazy val root = project
 
 lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("zio-optics"))
-  .settings(oldStdSettings("zio-optics"))
+  .settings(stdSettings(name = "zio-optics", packageName = Some("zio.optics")))
   .settings(oldCrossProjectSettings)
-  .settings(oldBuildInfoSettings("zio.optics"))
-  .settings(
-    libraryDependencies ++= Seq(
-      "dev.zio" %% "zio"          % zioVersion,
-      "dev.zio" %% "zio-test"     % zioVersion % Test,
-      "dev.zio" %% "zio-test-sbt" % zioVersion % Test
-    )
-  )
-  .settings(testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"))
-  .enablePlugins(BuildInfoPlugin)
 
 lazy val zioOpticsJS = zioOptics.js
   .settings(jsSettings)
