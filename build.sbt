@@ -68,6 +68,7 @@ lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
 
 lazy val zioOpticsJS = zioOptics.js
   .settings(jsSettings)
+  .settings(scala3Settings)
   .settings(
     crossScalaVersions -= scala211.value,
     libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test
