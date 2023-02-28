@@ -59,8 +59,8 @@ lazy val root = project
 
 lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("zio-optics"))
-  .settings(stdSettings(name = "zio-optics", packageName = Some("zio.optics")))
-  .settings(oldCrossProjectSettings)
+  .settings(stdSettings(name = "zio-optics", packageName = Some("zio.optics"), enableCrossProject = true))
+  .settings(enableZIO())
 
 lazy val zioOpticsJS = zioOptics.js
   .settings(jsSettings)
