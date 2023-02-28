@@ -1,5 +1,3 @@
-import BuildHelper._
-
 enablePlugins(ZioSbtEcosystemPlugin, ZioSbtCiPlugin)
 
 crossScalaVersions := Seq.empty
