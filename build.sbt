@@ -19,7 +19,13 @@ inThisBuild(
         "adam.fraser@gmail.com",
         url("https://github.com/adamgfraser")
       )
-    )
+    ),
+    supportedScalaVersions :=
+      Map(
+        (zioOpticsJVM / thisProject).value.id    -> (zioOpticsJVM / crossScalaVersions).value,
+        (zioOpticsNative / thisProject).value.id -> (zioOpticsNative / crossScalaVersions).value,
+        (zioOpticsJS / thisProject).value.id     -> (zioOpticsJS / crossScalaVersions).value
+      )
   )
 )
 
