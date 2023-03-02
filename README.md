@@ -116,7 +116,7 @@ println(updated)
 
 ## Documentation
 
-Learn more on the [ZIO Optics homepage](https://zio.dev/zio-optics/)!
+Learn more on the [ZIO Optics homepage](https://zio.dev/zio-optics)!
 
 ## Contributing
 

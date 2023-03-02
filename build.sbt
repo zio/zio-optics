@@ -1,10 +1,11 @@
-import BuildHelper._
+enablePlugins(ZioSbtEcosystemPlugin, ZioSbtCiPlugin)
+
+crossScalaVersions := Seq.empty
 
 inThisBuild(
   List(
-    organization := "dev.zio",
-    homepage := Some(url("https://zio.dev/zio-optics/")),
-    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    name := "ZIO Optics",
+    ciEnabledBranches := Seq("series/2.x"),
     developers := List(
       Developer(
         "jdegoes",
@@ -19,9 +20,12 @@ inThisBuild(
         url("https://github.com/adamgfraser")
       )
     ),
-    pgpPassphrase := sys.env.get("PGP_PASSWORD").map(_.toArray),
-    pgpPublicRing := file("/tmp/public.asc"),
-    pgpSecretRing := file("/tmp/secret.asc")
+    supportedScalaVersions :=
+      Map(
+        (zioOpticsJVM / thisProject).value.id    -> (zioOpticsJVM / crossScalaVersions).value,
+        (zioOpticsNative / thisProject).value.id -> (zioOpticsNative / crossScalaVersions).value,
+        (zioOpticsJS / thisProject).value.id     -> (zioOpticsJS / crossScalaVersions).value
+      )
   )
 )
 
@@ -59,31 +63,25 @@ lazy val root = project
 
 lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("zio-optics"))
-  .settings(stdSettings("zio-optics"))
-  .settings(crossProjectSettings)
-  .settings(buildInfoSettings("zio.optics"))
-  .settings(
-    libraryDependencies ++= Seq(
-      "dev.zio" %% "zio"          % zioVersion,
-      "dev.zio" %% "zio-test"     % zioVersion % Test,
-      "dev.zio" %% "zio-test-sbt" % zioVersion % Test
-    )
-  )
-  .settings(testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework"))
-  .enablePlugins(BuildInfoPlugin)
+  .settings(stdSettings(name = "zio-optics", packageName = Some("zio.optics"), enableCrossProject = true))
+  .settings(enableZIO())
 
 lazy val zioOpticsJS = zioOptics.js
   .settings(jsSettings)
-  .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
+  .settings(
+    crossScalaVersions --= Seq(scala211.value, scala3.value),
+    libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test
+  )
   .settings(scalaJSUseMainModuleInitializer := true)
 
 lazy val zioOpticsJVM = zioOptics.jvm
-  .settings(dottySettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
   .settings(scalaReflectTestSettings)
 
 lazy val zioOpticsNative = zioOptics.native
   .settings(nativeSettings)
+  .settings(crossScalaVersions -= scala211.value)
 
 lazy val docs = project
   .in(file("zio-optics-docs"))
@@ -91,10 +89,10 @@ lazy val docs = project
     moduleName := "zio-optics-docs",
     scalacOptions -= "-Yno-imports",
     scalacOptions -= "-Xfatal-warnings",
-    projectName := "ZIO Optics",
+    crossScalaVersions -= scala211.value,
+    projectName := (ThisBuild / name).value,
     mainModuleName := (zioOpticsJVM / moduleName).value,
     projectStage := ProjectStage.Development,
-    docsPublishBranch := "series/2.x",
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(zioOpticsJVM)
   )
   .dependsOn(zioOpticsJVM)
