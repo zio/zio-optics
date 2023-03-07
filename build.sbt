@@ -22,9 +22,9 @@ inThisBuild(
     ),
     supportedScalaVersions :=
       Map(
-        (zioOpticsJVM / thisProject).value.id    -> (zioOpticsJVM / crossScalaVersions).value,
-        (zioOpticsNative / thisProject).value.id -> (zioOpticsNative / crossScalaVersions).value,
-        (zioOpticsJS / thisProject).value.id     -> (zioOpticsJS / crossScalaVersions).value
+        (zioOptics.jvm / thisProject).value.id    -> (zioOptics.jvm / crossScalaVersions).value,
+        (zioOptics.native / thisProject).value.id -> (zioOptics.native / crossScalaVersions).value,
+        (zioOptics.js / thisProject).value.id     -> (zioOptics.js / crossScalaVersions).value
       )
   )
 )
@@ -46,7 +46,7 @@ addCommandAlias(
   ";zioOpticsNative/test:compile"
 )
 
-val zioVersion = "2.0.6"
+val zioVersion = "2.0.10"
 
 lazy val root = project
   .in(file("."))
@@ -55,9 +55,9 @@ lazy val root = project
     unusedCompileDependenciesFilter -= moduleFilter("org.scala-js", "scalajs-library")
   )
   .aggregate(
-    zioOpticsJVM,
-    zioOpticsJS,
-    zioOpticsNative,
+    zioOptics.jvm,
+    zioOptics.js,
+    zioOptics.native,
     docs
   )
 
@@ -65,23 +65,17 @@ lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("zio-optics"))
   .settings(stdSettings(name = "zio-optics", packageName = Some("zio.optics"), enableCrossProject = true))
   .settings(enableZIO())
-
-lazy val zioOpticsJS = zioOptics.js
-  .settings(jsSettings)
   .settings(
-    crossScalaVersions --= Seq(scala211.value, scala3.value),
-    libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test
+    libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test,
+    excludeDependencies ++= List(
+      ExclusionRule("org.portable-scala", "portable-scala-reflect_2.13")
+    )
   )
-  .settings(scalaJSUseMainModuleInitializer := true)
-
-lazy val zioOpticsJVM = zioOptics.jvm
-  .settings(scala3Settings)
-  .settings(libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test)
-  .settings(scalaReflectTestSettings)
-
-lazy val zioOpticsNative = zioOptics.native
-  .settings(nativeSettings)
-  .settings(crossScalaVersions -= scala211.value)
+  .jvmSettings(scala3Settings)
+  .jvmSettings(scalaReflectTestSettings)
+  .jsSettings(jsSettings)
+  .jsSettings(scalaJSUseMainModuleInitializer := true)
+  .nativeSettings(nativeSettings)
 
 lazy val docs = project
   .in(file("zio-optics-docs"))
@@ -91,9 +85,9 @@ lazy val docs = project
     scalacOptions -= "-Xfatal-warnings",
     crossScalaVersions -= scala211.value,
     projectName := (ThisBuild / name).value,
-    mainModuleName := (zioOpticsJVM / moduleName).value,
+    mainModuleName := (zioOptics.jvm / moduleName).value,
     projectStage := ProjectStage.Development,
-    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(zioOpticsJVM)
+    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(zioOptics.jvm)
   )
-  .dependsOn(zioOpticsJVM)
+  .dependsOn(zioOptics.jvm)
   .enablePlugins(WebsitePlugin)

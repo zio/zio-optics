@@ -70,11 +70,14 @@ jobs:
         - ++2.12.17 zioOpticsJVM
         - ++2.13.10 zioOpticsJVM
         - ++3.2.2 zioOpticsJVM
+        - ++2.11.12 zioOpticsNative
         - ++2.12.17 zioOpticsNative
         - ++2.13.10 zioOpticsNative
         - ++3.2.2 zioOpticsNative
+        - ++2.11.12 zioOpticsJS
         - ++2.12.17 zioOpticsJS
         - ++2.13.10 zioOpticsJS
+        - ++3.2.2 zioOpticsJS
     steps:
     - name: Setup Scala
       uses: actions/setup-java@v3.10.0
