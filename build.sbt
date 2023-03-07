@@ -66,16 +66,19 @@ lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .settings(stdSettings(name = "zio-optics", packageName = Some("zio.optics"), enableCrossProject = true))
   .settings(enableZIO())
   .settings(
-    libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test,
-    excludeDependencies ++= List(
-      ExclusionRule("org.portable-scala", "portable-scala-reflect_2.13")
-    )
+    libraryDependencies += "dev.zio" %%% "zio-test-sbt" % zioVersion % Test
   )
   .jvmSettings(scala3Settings)
   .jvmSettings(scalaReflectTestSettings)
   .jsSettings(jsSettings)
-  .jsSettings(scalaJSUseMainModuleInitializer := true)
+  .jsSettings(
+    scalaJSUseMainModuleInitializer := true,
+    excludeDependencies += ExclusionRule("org.portable-scala", "portable-scala-reflect_2.13")
+  )
   .nativeSettings(nativeSettings)
+  .nativeSettings(
+    excludeDependencies += ExclusionRule("org.portable-scala", "portable-scala-reflect_2.13")
+  )
 
 lazy val docs = project
   .in(file("zio-optics-docs"))
