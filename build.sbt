@@ -73,7 +73,9 @@ lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .jsSettings(jsSettings)
   .jsSettings(
     scalaJSUseMainModuleInitializer := true,
-    scalacOptions += "-scalajs", // https://github.com/zio/zio-sbt/pull/150
+    scalacOptions ++= {
+      if (scalaVersion.value == scala3.value) List("-scalajs") else List() // https://github.com/zio/zio-sbt/pull/150
+    },
     excludeDependencies += ExclusionRule("org.portable-scala", "portable-scala-reflect_2.13")
   )
   .nativeSettings(nativeSettings)
