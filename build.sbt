@@ -24,7 +24,7 @@ inThisBuild(
       Map(
         (zioOptics.jvm / thisProject).value.id    -> (zioOptics.jvm / crossScalaVersions).value,
         (zioOptics.native / thisProject).value.id -> (zioOptics.native / crossScalaVersions).value,
-        (zioOptics.js / thisProject).value.id     -> (zioOptics.js / crossScalaVersions).value
+        (zioOptics.js / thisProject).value.id     -> (zioOptics.js / crossScalaVersions).value.filterNot(_ == scala3.value)
       )
   )
 )
@@ -73,6 +73,7 @@ lazy val zioOptics = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .jsSettings(jsSettings)
   .jsSettings(
     scalaJSUseMainModuleInitializer := true,
+    scalacOptions += "-scalajs", // https://github.com/zio/zio-sbt/pull/150
     excludeDependencies += ExclusionRule("org.portable-scala", "portable-scala-reflect_2.13")
   )
   .nativeSettings(nativeSettings)
