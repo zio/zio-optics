@@ -53,9 +53,9 @@ We use the data type `OpticFailure` to model the different ways that getting or 
 trait OpticFailure extends Throwable
 ```
 
-The `SetError` type of a prism will be `Nothing` because given one of the cases of a product type we can always return a new value of the product type since each case of the product type is an instance of the product type.
+The `SetError` type of a prism will be `Nothing` because given one of the cases of a sum type we can always return a new value of the sum type since each case of the sum type is an instance of the sum type.
 
-A prism also differs from a lens in that we do not need any original structure to set. A product type consists of nothing but its cases so if we have a new value of the case we want to set we can just use that value and don't need the original structure.
+A prism also differs from a lens in that we do not need any original structure to set. A sum type consists of nothing but its cases so if we have a new value of the case we want to set we can just use that value and don't need the original structure.
 
 We represent this by using `Any` for the `SetWholeBefore` type, indicating that we do not need any original structure to set a new value.
 
